@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>플래시카드 학습</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .card {
+            width: 300px;
+            height: 200px;
+            perspective: 1000px;
+            margin: 20px auto;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .card div {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .front {
+            background-color: #ffeb3b;
+        }
+
+        .back {
+            background-color: #4caf50;
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .flipped .front {
+            transform: rotateY(180deg);
+        }
+
+        .flipped .back {
+            transform: rotateY(0);
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>플래시카드 학습</h1>
+        <div class="card" onclick="flipCard()">
+            <div class="front">에 익숙한</div>
+            <div class="back">Familiar with</div>
+        </div>
+        <button onclick="nextCard()">다음 카드</button>
+    </div>
+
+    <script>
+        let flipped = false;
+
+        function flipCard() {
+            let card = document.querySelector('.card');
+            flipped = !flipped;
+            card.classList.toggle('flipped', flipped);
+        }
+
+        function nextCard() {
+            let front = document.querySelector('.front');
+            let back = document.querySelector('.back');
+
+            // 예시 카드 데이터 (추후 API 연동 가능)
+            let flashcards = [
+                { front: "에 익숙한", back: "Familiar with" },
+                { front: "집중하다", back: "Focus on" },
+                { front: "영향을 미치다", back: "Affect" },
+                { front: "도전하다", back: "Challenge" },
+                { front: "계획을 세우다", back: "Make a plan" }
+            ];
+
+            let randomIndex = Math.floor(Math.random() * flashcards.length);
+            front.textContent = flashcards[randomIndex].front;
+            back.textContent = flashcards[randomIndex].back;
+
+            flipped = false;
+            document.querySelector('.card').classList.remove('flipped');
+        }
+    </script>
+</body>
+</html>
