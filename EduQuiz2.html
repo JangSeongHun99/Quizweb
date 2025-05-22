@@ -18,7 +18,7 @@
       line-height: 1.6;
     }
 
-    /* Quizlet 느낌의 헤더 스타일 */
+    /* 헤더 스타일 */
     header {
       background-color: #ffffff;
       border-bottom: 1px solid #e1e1e1;
@@ -61,6 +61,51 @@
       color: #0076ff;
     }
 
+    /* 사용자 입력 폼 및 정렬 버튼 */
+    .flashcard-input {
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid #e1e1e1;
+      border-radius: 8px;
+    }
+    .flashcard-input h2 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+    .flashcard-input form div {
+      margin-bottom: 10px;
+    }
+    .flashcard-input label {
+      margin-right: 10px;
+      font-weight: bold;
+    }
+    .flashcard-input input {
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: calc(100% - 90px);
+    }
+    .flashcard-input button {
+      cursor: pointer;
+      padding: 10px 15px;
+      background: #0076ff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+    .flashcard-input button:hover {
+      background: #005bb5;
+    }
+    #shuffleBtn {
+      margin-top: 10px;
+      background: #28a745;
+    }
+    #shuffleBtn:hover {
+      background: #218838;
+    }
+
     /* 플래시카드 그리드 레이아웃 */
     .flashcards-grid {
       display: grid;
@@ -71,7 +116,7 @@
     /* 플래시카드 스타일 */
     .flashcard {
       background-color: transparent;
-      perspective: 1000px; /* 3D 효과를 위한 원근감 */
+      perspective: 1000px;
       cursor: pointer;
     }
     .flashcard .card-inner {
@@ -83,7 +128,6 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       border-radius: 10px;
     }
-    /* 플래시카드 클릭 시 flip 효과 */
     .flashcard.flipped .card-inner {
       transform: rotateY(180deg);
     }
@@ -125,53 +169,119 @@
     </nav>
   </header>
 
-  <!-- 메인 컨텐츠 -->
+  <!-- 메인 컨텐츠 영역 -->
   <div class="container">
     <h1>플래시카드 공부</h1>
-    <div class="flashcards-grid">
-      <!-- 플래시카드 예제 1 -->
+
+    <!-- 사용자 단어 입력 및 정렬 섹션 -->
+    <div class="flashcard-input">
+      <h2>새 카드 추가</h2>
+      <form id="cardForm">
+        <div>
+          <label for="cardFront">단어:</label>
+          <input type="text" id="cardFront" placeholder="단어 입력" required>
+        </div>
+        <div>
+          <label for="cardBack">뜻:</label>
+          <input type="text" id="cardBack" placeholder="뜻 입력" required>
+        </div>
+        <button type="submit">카드 추가</button>
+      </form>
+      <button id="shuffleBtn">랜덤 정렬</button>
+    </div>
+
+    <!-- 플래시카드 그리드 -->
+    <div class="flashcards-grid" id="flashcardsGrid">
+      <!-- 초기 예시 카드들 -->
       <div class="flashcard">
         <div class="card-inner">
           <div class="card-face front">
-            단어: apple
+            apple
           </div>
           <div class="card-face back">
-            뜻: 사과
+            사과
           </div>
         </div>
       </div>
-      <!-- 플래시카드 예제 2 -->
       <div class="flashcard">
         <div class="card-inner">
           <div class="card-face front">
-            단어: banana
+            banana
           </div>
           <div class="card-face back">
-            뜻: 바나나
+            바나나
           </div>
         </div>
       </div>
-      <!-- 플래시카드 예제 3 -->
       <div class="flashcard">
         <div class="card-inner">
           <div class="card-face front">
-            단어: cherry
+            cherry
           </div>
           <div class="card-face back">
-            뜻: 체리
+            체리
           </div>
         </div>
       </div>
-      <!-- 추가 카드: 필요에 따라 더 추가하세요 -->
     </div>
   </div>
 
-  <!-- JavaScript: 카드를 클릭하면 뒤집힘 -->
+  <!-- JavaScript: 카드 클릭시 뒤집기, 카드 추가, 랜덤 정렬 -->
   <script>
+    // 기존 카드들에 뒤집기 이벤트 추가
     document.querySelectorAll('.flashcard').forEach(card => {
       card.addEventListener('click', () => {
         card.classList.toggle('flipped');
       });
+    });
+
+    // 사용자 입력으로 카드 추가하기
+    const form = document.getElementById('cardForm');
+    const flashcardsGrid = document.getElementById('flashcardsGrid');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const frontText = document.getElementById('cardFront').value.trim();
+      const backText = document.getElementById('cardBack').value.trim();
+      if (frontText && backText) {
+        // 새로운 플래시카드 DOM 생성
+        const cardDiv = document.createElement('div');
+        cardDiv.classList.add('flashcard');
+
+        const innerDiv = document.createElement('div');
+        innerDiv.classList.add('card-inner');
+
+        const faceFront = document.createElement('div');
+        faceFront.classList.add('card-face', 'front');
+        faceFront.textContent = frontText;
+
+        const faceBack = document.createElement('div');
+        faceBack.classList.add('card-face', 'back');
+        faceBack.textContent = backText;
+
+        innerDiv.appendChild(faceFront);
+        innerDiv.appendChild(faceBack);
+        cardDiv.appendChild(innerDiv);
+
+        // 클릭 시 뒤집히는 이벤트 추가
+        cardDiv.addEventListener('click', () => {
+          cardDiv.classList.toggle('flipped');
+        });
+
+        flashcardsGrid.appendChild(cardDiv);
+        form.reset();
+      }
+    });
+
+    // 랜덤 정렬 기능: 그리드 내 카드 순서를 랜덤하게 셔플
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    shuffleBtn.addEventListener('click', () => {
+      const cards = Array.from(flashcardsGrid.children);
+      // 배열을 랜덤하게 섞은 후 다시 DOM에 추가 (Fisher-Yates Shuffle 알고리즘)
+      for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        flashcardsGrid.insertBefore(cards[j], cards[i].nextSibling);
+      }
     });
   </script>
   
