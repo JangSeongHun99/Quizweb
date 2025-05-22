@@ -1,116 +1,179 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>플래시카드 학습</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>퀴즐렛 플래시카드 클론</title>
+  <style>
+    /* 기본 리셋 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f9fc;
+      color: #333;
+      line-height: 1.6;
+    }
 
-        .container {
-            margin-top: 50px;
-        }
+    /* Quizlet 느낌의 헤더 스타일 */
+    header {
+      background-color: #ffffff;
+      border-bottom: 1px solid #e1e1e1;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #222;
+    }
+    header nav ul {
+      list-style: none;
+      display: flex;
+    }
+    header nav ul li {
+      margin: 0 10px;
+    }
+    header nav ul li a {
+      text-decoration: none;
+      color: #555;
+      padding: 5px;
+      transition: color 0.3s;
+    }
+    header nav ul li a:hover {
+      color: #0076ff;
+    }
 
-        .card {
-            width: 300px;
-            height: 200px;
-            perspective: 1000px;
-            margin: 20px auto;
-            position: relative;
-            cursor: pointer;
-        }
+    /* 메인 컨테이너 */
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+    .container h1 {
+      margin-bottom: 20px;
+      text-align: center;
+      color: #0076ff;
+    }
 
-        .card div {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            backface-visibility: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+    /* 플래시카드 그리드 레이아웃 */
+    .flashcards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
 
-        .front {
-            background-color: #ffeb3b;
-        }
-
-        .back {
-            background-color: #4caf50;
-            color: white;
-            transform: rotateY(180deg);
-        }
-
-        .flipped .front {
-            transform: rotateY(180deg);
-        }
-
-        .flipped .back {
-            transform: rotateY(0);
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 18px;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    /* 플래시카드 스타일 */
+    .flashcard {
+      background-color: transparent;
+      perspective: 1000px; /* 3D 효과를 위한 원근감 */
+      cursor: pointer;
+    }
+    .flashcard .card-inner {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+    /* 플래시카드 클릭 시 flip 효과 */
+    .flashcard.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+    .flashcard .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+      border-radius: 10px;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+    .flashcard .card-face.front {
+      background-color: #ffffff;
+    }
+    .flashcard .card-face.back {
+      background-color: #0076ff;
+      color: #fff;
+      transform: rotateY(180deg);
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>플래시카드 학습</h1>
-        <div class="card" onclick="flipCard()">
-            <div class="front">에 익숙한</div>
-            <div class="back">Familiar with</div>
+
+  <!-- 상단 네비게이션 영역 -->
+  <header>
+    <div class="logo">Quizlet Clone</div>
+    <nav>
+      <ul>
+        <li><a href="#">홈</a></li>
+        <li><a href="#">학습하기</a></li>
+        <li><a href="#">내 단어장</a></li>
+        <li><a href="#">프로필</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- 메인 컨텐츠 -->
+  <div class="container">
+    <h1>플래시카드 공부</h1>
+    <div class="flashcards-grid">
+      <!-- 플래시카드 예제 1 -->
+      <div class="flashcard">
+        <div class="card-inner">
+          <div class="card-face front">
+            단어: apple
+          </div>
+          <div class="card-face back">
+            뜻: 사과
+          </div>
         </div>
-        <button onclick="nextCard()">다음 카드</button>
+      </div>
+      <!-- 플래시카드 예제 2 -->
+      <div class="flashcard">
+        <div class="card-inner">
+          <div class="card-face front">
+            단어: banana
+          </div>
+          <div class="card-face back">
+            뜻: 바나나
+          </div>
+        </div>
+      </div>
+      <!-- 플래시카드 예제 3 -->
+      <div class="flashcard">
+        <div class="card-inner">
+          <div class="card-face front">
+            단어: cherry
+          </div>
+          <div class="card-face back">
+            뜻: 체리
+          </div>
+        </div>
+      </div>
+      <!-- 추가 카드: 필요에 따라 더 추가하세요 -->
     </div>
+  </div>
 
-    <script>
-        let flipped = false;
-
-        function flipCard() {
-            let card = document.querySelector('.card');
-            flipped = !flipped;
-            card.classList.toggle('flipped', flipped);
-        }
-
-        function nextCard() {
-            let front = document.querySelector('.front');
-            let back = document.querySelector('.back');
-
-            // 예시 카드 데이터 (추후 API 연동 가능)
-            let flashcards = [
-                { front: "에 익숙한", back: "Familiar with" },
-                { front: "집중하다", back: "Focus on" },
-                { front: "영향을 미치다", back: "Affect" },
-                { front: "도전하다", back: "Challenge" },
-                { front: "계획을 세우다", back: "Make a plan" }
-            ];
-
-            let randomIndex = Math.floor(Math.random() * flashcards.length);
-            front.textContent = flashcards[randomIndex].front;
-            back.textContent = flashcards[randomIndex].back;
-
-            flipped = false;
-            document.querySelector('.card').classList.remove('flipped');
-        }
-    </script>
+  <!-- JavaScript: 카드를 클릭하면 뒤집힘 -->
+  <script>
+    document.querySelectorAll('.flashcard').forEach(card => {
+      card.addEventListener('click', () => {
+        card.classList.toggle('flipped');
+      });
+    });
+  </script>
+  
 </body>
 </html>
