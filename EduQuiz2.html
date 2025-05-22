@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>퀴즐렛 플래시카드 클론 - 힌트 기능 추가</title>
+  <title>퀴즐렛 플래시카드 클론 - 통합 기능</title>
   <style>
     /* 기본 리셋 및 전반적인 스타일 */
     * {
@@ -46,6 +46,7 @@
     header nav ul li a:hover {
       color: #0076ff;
     }
+
     .container {
       max-width: 1000px;
       margin: 20px auto;
@@ -56,7 +57,8 @@
       text-align: center;
       color: #0076ff;
     }
-    /* 단어 입력 폼 영역 */
+
+    /* 입력 폼 영역 */
     .flashcard-input {
       background: #fff;
       padding: 20px;
@@ -68,7 +70,7 @@
       margin-bottom: 10px;
       font-size: 1.2rem;
     }
-    .flashcard-input form div {
+    .flashcard-input form > div {
       margin-bottom: 10px;
     }
     .flashcard-input label {
@@ -107,78 +109,96 @@
     #shuffleBtn:hover {
       background: #218838;
     }
-    /* 플래시카드 그리드 및 카드 기본 스타일 */
+
+    /* 플래시카드 그리드: 4개 이상의 카드 */
     .flashcards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 20px;
     }
+
+    /* 개별 카드 컨테이너 */
     .flashcard {
-      background-color: transparent;
-      perspective: 1000px;
-      cursor: pointer;
-    }
-    .flashcard .card-inner {
+      width: 100%;
+      height: 300px;
       position: relative;
-      width: 100%;
-      min-height: 200px;
-      transition: transform 0.6s;
-      transform-style: preserve-3d;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
+      perspective: 1000px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      background-color: #fff;
     }
-    .flashcard.flipped .card-inner {
-      transform: rotateY(180deg);
+    /* 카드 상단 고정 영역 */
+    .card-header {
+      position: relative;
+      height: 60px;
+      padding: 10px;
+      background: #fff;
+      border-bottom: 1px solid #e1e1e1;
+      z-index: 2;
     }
-    .flashcard .card-face {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      padding: 20px;
-      border-radius: 10px;
-      backface-visibility: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-    .flashcard .card-face.front {
-      background-color: #ffffff;
-    }
-    .flashcard .card-face.back {
-      background-color: #0076ff;
-      color: #fff;
-      transform: rotateY(180deg);
-      overflow-y: auto;
-    }
-    .flashcard .card-face.back .primary {
-      font-size: 1.4rem;
+    .card-header .word-text {
+      font-size: 1.2rem;
       font-weight: bold;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
     }
-    .flashcard .card-face.back .detail {
-      font-size: 1rem;
-      line-height: 1.4;
-    }
-    /* 힌트 관련 스타일 */
     .hint-btn {
-      margin-top: 10px;
-      padding: 5px 10px;
+      padding: 5px 8px;
       background: #ffdc00;
       border: none;
       border-radius: 4px;
-      cursor: pointer;
       font-size: 0.9rem;
+      cursor: pointer;
     }
     .hint-content {
-      margin-top: 10px;
+      margin-top: 5px;
       font-size: 0.9rem;
       color: #555;
+    }
+
+    /* 뒤집히는 영역: 헤더 아래 (카드내용 부분) */
+    .card-inner {
+      position: absolute;
+      top: 60px; /* 헤더 높이 */
+      left: 0;
+      width: 100%;
+      height: calc(100% - 60px);
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    /* 뒤집힘 상태 */
+    .flashcard.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+    /* 앞면, 뒷면 영역 */
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      padding: 10px;
+      border: 1px solid #e1e1e1;
+      border-radius: 0 0 8px 8px;
+      backface-visibility: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background-color: #f0f0f0;
+    }
+    .card-face.back {
+      transform: rotateY(180deg);
+    }
+    .card-body p {
+      font-size: 1.1rem;
+    }
+    .card-body .primary {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .card-body .detail {
+      font-size: 1rem;
+      line-height: 1.4;
     }
   </style>
 </head>
@@ -195,10 +215,12 @@
       </ul>
     </nav>
   </header>
-
-  <!-- 메인 컨텐츠 영역 -->
+  
+  <!-- 메인 컨텐츠 -->
   <div class="container">
     <h1>플래시카드 공부</h1>
+    
+    <!-- 사용자 단어 및 상세 내용 입력 영역 -->
     <div class="flashcard-input">
       <h2>새 카드 추가</h2>
       <form id="cardForm">
@@ -222,148 +244,218 @@
       </form>
       <button id="shuffleBtn">랜덤 정렬</button>
     </div>
-
-    <!-- 플래시카드 그리드 영역 -->
+    
+    <!-- 플래시카드 그리드 영역 (초기 4개 카드) -->
     <div class="flashcards-grid" id="flashcardsGrid">
-      <!-- 초기 예시 카드 (힌트 포함) -->
+      <!-- 카드 1 -->
       <div class="flashcard">
+        <div class="card-header">
+          <div class="word-text">apple</div>
+          <button class="hint-btn">힌트 보기</button>
+          <div class="hint-content" style="display: none;">빨갛고 달콤한 과일</div>
+        </div>
         <div class="card-inner">
           <div class="card-face front">
-            <div class="word-text">apple</div>
-            <button class="hint-btn">힌트 보기</button>
-            <div class="hint-content" style="display: none;">빨갛고 달콤한 과일</div>
+            <div class="card-body">
+              <p>문제를 맞춰보세요!</p>
+            </div>
           </div>
           <div class="card-face back">
-            <div class="primary">사과</div>
-            <div class="detail">사과는 영양가가 풍부하고, 다양한 요리에 활용됩니다.</div>
+            <div class="card-body">
+              <div class="primary">사과</div>
+              <div class="detail">사과는 영양가가 풍부하며 다양한 요리에 활용됩니다.</div>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- 카드 2 -->
       <div class="flashcard">
+        <div class="card-header">
+          <div class="word-text">banana</div>
+          <button class="hint-btn">힌트 보기</button>
+          <div class="hint-content" style="display: none;">길고 노란 과일</div>
+        </div>
         <div class="card-inner">
           <div class="card-face front">
-            <div class="word-text">banana</div>
-            <!-- 이 카드에는 힌트가 없으므로 단어만 표시 -->
+            <div class="card-body">
+              <p>문제를 맞춰보세요!</p>
+            </div>
           </div>
           <div class="card-face back">
-            <div class="primary">바나나</div>
-            <div class="detail">바나나는 에너지가 풍부하여 운동 전후 섭취하면 좋습니다.</div>
+            <div class="card-body">
+              <div class="primary">바나나</div>
+              <div class="detail">바나나는 에너지원으로 운동 전후 섭취하기 좋습니다.</div>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- 카드 3 -->
       <div class="flashcard">
+        <div class="card-header">
+          <div class="word-text">cherry</div>
+          <button class="hint-btn">힌트 보기</button>
+          <div class="hint-content" style="display: none;">작고 붉은 과일</div>
+        </div>
         <div class="card-inner">
           <div class="card-face front">
-            <div class="word-text">cherry</div>
-            <button class="hint-btn">힌트 보기</button>
-            <div class="hint-content" style="display: none;">작고 붉은 과일</div>
+            <div class="card-body">
+              <p>문제를 맞춰보세요!</p>
+            </div>
           </div>
           <div class="card-face back">
-            <div class="primary">체리</div>
-            <div class="detail">체리는 항산화 성분이 풍부해 건강에 도움을 줍니다.</div>
+            <div class="card-body">
+              <div class="primary">체리</div>
+              <div class="detail">체리는 항산화 효과로 건강에 도움을 줍니다.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 카드 4 -->
+      <div class="flashcard">
+        <div class="card-header">
+          <div class="word-text">date</div>
+          <button class="hint-btn">힌트 보기</button>
+          <div class="hint-content" style="display: none;">달콤하고 쫄깃한 말린 과일</div>
+        </div>
+        <div class="card-inner">
+          <div class="card-face front">
+            <div class="card-body">
+              <p>문제를 맞춰보세요!</p>
+            </div>
+          </div>
+          <div class="card-face back">
+            <div class="card-body">
+              <div class="primary">대추</div>
+              <div class="detail">대추는 영양가 높고 건강에 좋은 말린 과일입니다.</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- JavaScript: 카드 뒤집기, 새 카드 추가, 랜덤 정렬, 힌트 토글 -->
+  
+  <!-- JavaScript: 카드 뒤집기, 힌트 토글, 새 카드 추가, 랜덤 정렬 -->
   <script>
-    // 카드 뒤집기 이벤트 함수
+    // 카드 뒤집기 기능: 뒤집히는 영역(.card-inner)을 클릭하면 부모 카드에 flipped 클래스를 토글합니다.
     function addFlipEvent(card) {
       card.addEventListener('click', () => {
-        card.classList.toggle('flipped');
+        card.parentNode.classList.toggle('flipped');
       });
     }
-
-    // 기존 카드에 뒤집기 이벤트 추가
-    document.querySelectorAll('.flashcard').forEach(card => {
-      addFlipEvent(card);
+    
+    // 기존 카드들에 뒤집기 이벤트 추가 (카드 헤더는 제외하고 뒤집히는 영역만)
+    document.querySelectorAll('.card-inner').forEach(inner => {
+      inner.addEventListener('click', () => {
+        inner.parentNode.classList.toggle('flipped');
+      });
     });
 
-    // 폼 제출 시 새 카드 생성
+    // 각 카드 헤더 안의 힌트 버튼: 클릭 시 힌트 내용 토글 (이벤트 전파 중단)
+    function addHintEvent(btn) {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();  // 카드 전체 뒤집힘 방지
+        let hintContent = btn.nextElementSibling;
+        if (hintContent.style.display === 'none' || hintContent.style.display === '') {
+          hintContent.style.display = 'block';
+          btn.textContent = '힌트 숨기기';
+        } else {
+          hintContent.style.display = 'none';
+          btn.textContent = '힌트 보기';
+        }
+      });
+    }
+    document.querySelectorAll('.hint-btn').forEach(btn => {
+      addHintEvent(btn);
+    });
+
+    // 사용자 입력으로 새 카드 추가 기능
     const form = document.getElementById('cardForm');
     const flashcardsGrid = document.getElementById('flashcardsGrid');
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const frontText  = document.getElementById('cardFront').value.trim();
-      const backText   = document.getElementById('cardBack').value.trim();
-      const detailText = document.getElementById('cardDetail').value.trim();
-      const hintText   = document.getElementById('cardHint').value.trim();
+      const word      = document.getElementById('cardFront').value.trim();
+      const meaning   = document.getElementById('cardBack').value.trim();
+      const detail    = document.getElementById('cardDetail').value.trim();
+      const hint      = document.getElementById('cardHint').value.trim();
 
-      if (frontText && backText) {
-        // 카드 요소 생성
-        const cardDiv = document.createElement('div');
-        cardDiv.classList.add('flashcard');
+      if (word && meaning) {
+        // 카드 생성
+        let card = document.createElement('div');
+        card.classList.add('flashcard');
 
-        const innerDiv = document.createElement('div');
-        innerDiv.classList.add('card-inner');
-
-        // 앞면 구성 (단어와 힌트 기능)
-        const faceFront = document.createElement('div');
-        faceFront.classList.add('card-face', 'front');
-
-        const wordDiv = document.createElement('div');
+        // 카드 헤더 (단어 및 힌트 버튼/내용)
+        let header = document.createElement('div');
+        header.classList.add('card-header');
+        let wordDiv = document.createElement('div');
         wordDiv.classList.add('word-text');
-        wordDiv.textContent = frontText;
-        faceFront.appendChild(wordDiv);
+        wordDiv.textContent = word;
+        header.appendChild(wordDiv);
 
-        // 힌트가 입력되었을 경우 힌트 버튼 및 내용 추가
-        if (hintText) {
-          const hintBtn = document.createElement('button');
+        // 힌트가 있다면 추가
+        if (hint) {
+          let hintBtn = document.createElement('button');
           hintBtn.classList.add('hint-btn');
           hintBtn.textContent = '힌트 보기';
-
-          const hintContentDiv = document.createElement('div');
-          hintContentDiv.classList.add('hint-content');
-          hintContentDiv.style.display = 'none';
-          hintContentDiv.textContent = hintText;
-
-          // 힌트 버튼 클릭 시 카드 뒤집기 이벤트 전파를 막고 힌트 토글
-          hintBtn.addEventListener('click', (event) => {
-            event.stopPropagation();
-            if (hintContentDiv.style.display === 'none' || hintContentDiv.style.display === '') {
-              hintContentDiv.style.display = 'block';
-              hintBtn.textContent = '힌트 숨기기';
-            } else {
-              hintContentDiv.style.display = 'none';
-              hintBtn.textContent = '힌트 보기';
-            }
-          });
-
-          faceFront.appendChild(hintBtn);
-          faceFront.appendChild(hintContentDiv);
+          let hintDiv = document.createElement('div');
+          hintDiv.classList.add('hint-content');
+          hintDiv.style.display = 'none';
+          hintDiv.textContent = hint;
+          header.appendChild(hintBtn);
+          header.appendChild(hintDiv);
+          addHintEvent(hintBtn);
         }
+        card.appendChild(header);
 
-        // 뒷면 구성 (뜻 및 상세 내용)
-        const faceBack = document.createElement('div');
-        faceBack.classList.add('card-face', 'back');
+        // 카드 내용 부분 (뒤집히는 영역)
+        let inner = document.createElement('div');
+        inner.classList.add('card-inner');
 
-        const primaryDiv = document.createElement('div');
+        // 앞면: 기본 메시지
+        let frontFace = document.createElement('div');
+        frontFace.classList.add('card-face', 'front');
+        let frontBody = document.createElement('div');
+        frontBody.classList.add('card-body');
+        let frontMsg = document.createElement('p');
+        frontMsg.textContent = "문제를 맞춰보세요!";
+        frontBody.appendChild(frontMsg);
+        frontFace.appendChild(frontBody);
+
+        // 뒷면: 의미와 상세 내용 표시
+        let backFace = document.createElement('div');
+        backFace.classList.add('card-face', 'back');
+        let backBody = document.createElement('div');
+        backBody.classList.add('card-body');
+        let primaryDiv = document.createElement('div');
         primaryDiv.classList.add('primary');
-        primaryDiv.textContent = backText;
-        faceBack.appendChild(primaryDiv);
-
-        if (detailText) {
-          const detailDiv = document.createElement('div');
+        primaryDiv.textContent = meaning;
+        backBody.appendChild(primaryDiv);
+        if (detail) {
+          let detailDiv = document.createElement('div');
           detailDiv.classList.add('detail');
-          detailDiv.textContent = detailText;
-          faceBack.appendChild(detailDiv);
+          detailDiv.textContent = detail;
+          backBody.appendChild(detailDiv);
         }
+        backFace.appendChild(backBody);
 
-        innerDiv.appendChild(faceFront);
-        innerDiv.appendChild(faceBack);
-        cardDiv.appendChild(innerDiv);
+        inner.appendChild(frontFace);
+        inner.appendChild(backFace);
+        card.appendChild(inner);
 
-        // 새 카드에도 뒤집기 이벤트 추가
-        addFlipEvent(cardDiv);
-        flashcardsGrid.appendChild(cardDiv);
+        // 뒤집기 이벤트 등록: 카드 내용 영역 클릭 시 뒤집힘
+        inner.addEventListener('click', () => {
+          card.classList.toggle('flipped');
+        });
+
+        flashcardsGrid.appendChild(card);
         form.reset();
       }
     });
 
-    // 랜덤 정렬 기능 (Fisher-Yates Shuffle 방식)
+    // 랜덤 정렬 기능: Fisher-Yates Shuffle 알고리즘
     const shuffleBtn = document.getElementById('shuffleBtn');
     shuffleBtn.addEventListener('click', () => {
       const cards = Array.from(flashcardsGrid.children);
