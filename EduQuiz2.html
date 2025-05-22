@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>퀴즐렛 플래시카드 클론</title>
+  <title>퀴즐렛 플래시카드 클론 - 힌트 기능 추가</title>
   <style>
-    /* 기본 리셋 */
+    /* 기본 리셋 및 전반적인 스타일 */
     * {
       margin: 0;
       padding: 0;
@@ -17,10 +17,8 @@
       color: #333;
       line-height: 1.6;
     }
-
-    /* 헤더 스타일 */
     header {
-      background-color: #ffffff;
+      background-color: #fff;
       border-bottom: 1px solid #e1e1e1;
       padding: 10px 20px;
       display: flex;
@@ -48,8 +46,6 @@
     header nav ul li a:hover {
       color: #0076ff;
     }
-
-    /* 메인 컨테이너 */
     .container {
       max-width: 1000px;
       margin: 20px auto;
@@ -60,8 +56,7 @@
       text-align: center;
       color: #0076ff;
     }
-
-    /* 사용자 입력 폼 및 정렬 버튼 */
+    /* 단어 입력 폼 영역 */
     .flashcard-input {
       background: #fff;
       padding: 20px;
@@ -79,12 +74,19 @@
     .flashcard-input label {
       margin-right: 10px;
       font-weight: bold;
+      vertical-align: middle;
     }
-    .flashcard-input input {
+    .flashcard-input input,
+    .flashcard-input textarea {
       padding: 5px;
       border: 1px solid #ccc;
       border-radius: 4px;
       width: calc(100% - 90px);
+      vertical-align: middle;
+    }
+    .flashcard-input textarea {
+      resize: vertical;
+      height: 80px;
     }
     .flashcard-input button {
       cursor: pointer;
@@ -105,15 +107,12 @@
     #shuffleBtn:hover {
       background: #218838;
     }
-
-    /* 플래시카드 그리드 레이아웃 */
+    /* 플래시카드 그리드 및 카드 기본 스타일 */
     .flashcards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 20px;
     }
-
-    /* 플래시카드 스타일 */
     .flashcard {
       background-color: transparent;
       perspective: 1000px;
@@ -122,11 +121,15 @@
     .flashcard .card-inner {
       position: relative;
       width: 100%;
-      height: 200px;
+      min-height: 200px;
       transition: transform 0.6s;
       transform-style: preserve-3d;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
     .flashcard.flipped .card-inner {
       transform: rotateY(180deg);
@@ -139,9 +142,9 @@
       border-radius: 10px;
       backface-visibility: hidden;
       display: flex;
-      align-items: center;
+      flex-direction: column;
       justify-content: center;
-      font-size: 1.2rem;
+      align-items: center;
       text-align: center;
     }
     .flashcard .card-face.front {
@@ -151,11 +154,35 @@
       background-color: #0076ff;
       color: #fff;
       transform: rotateY(180deg);
+      overflow-y: auto;
+    }
+    .flashcard .card-face.back .primary {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .flashcard .card-face.back .detail {
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+    /* 힌트 관련 스타일 */
+    .hint-btn {
+      margin-top: 10px;
+      padding: 5px 10px;
+      background: #ffdc00;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .hint-content {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #555;
     }
   </style>
 </head>
 <body>
-
   <!-- 상단 네비게이션 영역 -->
   <header>
     <div class="logo">Quizlet Clone</div>
@@ -172,8 +199,6 @@
   <!-- 메인 컨텐츠 영역 -->
   <div class="container">
     <h1>플래시카드 공부</h1>
-
-    <!-- 사용자 단어 입력 및 정렬 섹션 -->
     <div class="flashcard-input">
       <h2>새 카드 추가</h2>
       <form id="cardForm">
@@ -185,105 +210,168 @@
           <label for="cardBack">뜻:</label>
           <input type="text" id="cardBack" placeholder="뜻 입력" required>
         </div>
+        <div>
+          <label for="cardDetail">상세 내용:</label>
+          <textarea id="cardDetail" placeholder="예문이나 추가 설명 입력"></textarea>
+        </div>
+        <div>
+          <label for="cardHint">힌트:</label>
+          <input type="text" id="cardHint" placeholder="힌트 입력 (선택)">
+        </div>
         <button type="submit">카드 추가</button>
       </form>
       <button id="shuffleBtn">랜덤 정렬</button>
     </div>
 
-    <!-- 플래시카드 그리드 -->
+    <!-- 플래시카드 그리드 영역 -->
     <div class="flashcards-grid" id="flashcardsGrid">
-      <!-- 초기 예시 카드들 -->
+      <!-- 초기 예시 카드 (힌트 포함) -->
       <div class="flashcard">
         <div class="card-inner">
           <div class="card-face front">
-            apple
+            <div class="word-text">apple</div>
+            <button class="hint-btn">힌트 보기</button>
+            <div class="hint-content" style="display: none;">빨갛고 달콤한 과일</div>
           </div>
           <div class="card-face back">
-            사과
+            <div class="primary">사과</div>
+            <div class="detail">사과는 영양가가 풍부하고, 다양한 요리에 활용됩니다.</div>
           </div>
         </div>
       </div>
       <div class="flashcard">
         <div class="card-inner">
           <div class="card-face front">
-            banana
+            <div class="word-text">banana</div>
+            <!-- 이 카드에는 힌트가 없으므로 단어만 표시 -->
           </div>
           <div class="card-face back">
-            바나나
+            <div class="primary">바나나</div>
+            <div class="detail">바나나는 에너지가 풍부하여 운동 전후 섭취하면 좋습니다.</div>
           </div>
         </div>
       </div>
       <div class="flashcard">
         <div class="card-inner">
           <div class="card-face front">
-            cherry
+            <div class="word-text">cherry</div>
+            <button class="hint-btn">힌트 보기</button>
+            <div class="hint-content" style="display: none;">작고 붉은 과일</div>
           </div>
           <div class="card-face back">
-            체리
+            <div class="primary">체리</div>
+            <div class="detail">체리는 항산화 성분이 풍부해 건강에 도움을 줍니다.</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- JavaScript: 카드 클릭시 뒤집기, 카드 추가, 랜덤 정렬 -->
+  <!-- JavaScript: 카드 뒤집기, 새 카드 추가, 랜덤 정렬, 힌트 토글 -->
   <script>
-    // 기존 카드들에 뒤집기 이벤트 추가
-    document.querySelectorAll('.flashcard').forEach(card => {
+    // 카드 뒤집기 이벤트 함수
+    function addFlipEvent(card) {
       card.addEventListener('click', () => {
         card.classList.toggle('flipped');
       });
+    }
+
+    // 기존 카드에 뒤집기 이벤트 추가
+    document.querySelectorAll('.flashcard').forEach(card => {
+      addFlipEvent(card);
     });
 
-    // 사용자 입력으로 카드 추가하기
+    // 폼 제출 시 새 카드 생성
     const form = document.getElementById('cardForm');
     const flashcardsGrid = document.getElementById('flashcardsGrid');
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const frontText = document.getElementById('cardFront').value.trim();
-      const backText = document.getElementById('cardBack').value.trim();
+      const frontText  = document.getElementById('cardFront').value.trim();
+      const backText   = document.getElementById('cardBack').value.trim();
+      const detailText = document.getElementById('cardDetail').value.trim();
+      const hintText   = document.getElementById('cardHint').value.trim();
+
       if (frontText && backText) {
-        // 새로운 플래시카드 DOM 생성
+        // 카드 요소 생성
         const cardDiv = document.createElement('div');
         cardDiv.classList.add('flashcard');
 
         const innerDiv = document.createElement('div');
         innerDiv.classList.add('card-inner');
 
+        // 앞면 구성 (단어와 힌트 기능)
         const faceFront = document.createElement('div');
         faceFront.classList.add('card-face', 'front');
-        faceFront.textContent = frontText;
 
+        const wordDiv = document.createElement('div');
+        wordDiv.classList.add('word-text');
+        wordDiv.textContent = frontText;
+        faceFront.appendChild(wordDiv);
+
+        // 힌트가 입력되었을 경우 힌트 버튼 및 내용 추가
+        if (hintText) {
+          const hintBtn = document.createElement('button');
+          hintBtn.classList.add('hint-btn');
+          hintBtn.textContent = '힌트 보기';
+
+          const hintContentDiv = document.createElement('div');
+          hintContentDiv.classList.add('hint-content');
+          hintContentDiv.style.display = 'none';
+          hintContentDiv.textContent = hintText;
+
+          // 힌트 버튼 클릭 시 카드 뒤집기 이벤트 전파를 막고 힌트 토글
+          hintBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            if (hintContentDiv.style.display === 'none' || hintContentDiv.style.display === '') {
+              hintContentDiv.style.display = 'block';
+              hintBtn.textContent = '힌트 숨기기';
+            } else {
+              hintContentDiv.style.display = 'none';
+              hintBtn.textContent = '힌트 보기';
+            }
+          });
+
+          faceFront.appendChild(hintBtn);
+          faceFront.appendChild(hintContentDiv);
+        }
+
+        // 뒷면 구성 (뜻 및 상세 내용)
         const faceBack = document.createElement('div');
         faceBack.classList.add('card-face', 'back');
-        faceBack.textContent = backText;
+
+        const primaryDiv = document.createElement('div');
+        primaryDiv.classList.add('primary');
+        primaryDiv.textContent = backText;
+        faceBack.appendChild(primaryDiv);
+
+        if (detailText) {
+          const detailDiv = document.createElement('div');
+          detailDiv.classList.add('detail');
+          detailDiv.textContent = detailText;
+          faceBack.appendChild(detailDiv);
+        }
 
         innerDiv.appendChild(faceFront);
         innerDiv.appendChild(faceBack);
         cardDiv.appendChild(innerDiv);
 
-        // 클릭 시 뒤집히는 이벤트 추가
-        cardDiv.addEventListener('click', () => {
-          cardDiv.classList.toggle('flipped');
-        });
-
+        // 새 카드에도 뒤집기 이벤트 추가
+        addFlipEvent(cardDiv);
         flashcardsGrid.appendChild(cardDiv);
         form.reset();
       }
     });
 
-    // 랜덤 정렬 기능: 그리드 내 카드 순서를 랜덤하게 셔플
+    // 랜덤 정렬 기능 (Fisher-Yates Shuffle 방식)
     const shuffleBtn = document.getElementById('shuffleBtn');
     shuffleBtn.addEventListener('click', () => {
       const cards = Array.from(flashcardsGrid.children);
-      // 배열을 랜덤하게 섞은 후 다시 DOM에 추가 (Fisher-Yates Shuffle 알고리즘)
       for (let i = cards.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         flashcardsGrid.insertBefore(cards[j], cards[i].nextSibling);
       }
     });
   </script>
-  
 </body>
 </html>
