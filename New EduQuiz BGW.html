@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>퀴즐렛 플래시카드 클론 - 내 단어장 학습 내용</title>
+  <title>퀴즐렛 플래시카드 클론 - 답보기 토글</title>
   <style>
     /* 기본 리셋 */
     * {
@@ -25,7 +25,6 @@
       align-items: center;
       justify-content: space-between;
     }
-    /* 헤더 좌측: 로고와 검색 입력 한 줄에 배치 */
     .header-left {
       display: flex;
       align-items: center;
@@ -36,7 +35,6 @@
       color: #222;
       margin-right: 10px;
     }
-    /* 상단 바에 위치한 검색 입력 (너비 400px, 회색 배경/텍스트) */
     #searchInput {
       padding: 8px;
       width: 400px;
@@ -54,7 +52,6 @@
     header nav ul li {
       margin: 0 10px;
     }
-    /* "홈", "내 단어장" 등 네비게이션 항목 */
     header nav ul li a,
     header nav ul li button {
       text-decoration: none;
@@ -70,7 +67,6 @@
     header nav ul li button:hover {
       color: #0076ff;
     }
-    
     .container {
       max-width: 1000px;
       margin: 20px auto;
@@ -81,9 +77,43 @@
       text-align: center;
       color: #0076ff;
     }
-    
-    /* --- 카드 영역 --- */
-    /* 카드 추가 폼 영역 (처음엔 숨김) */
+    /* --- 카드 애니메이션 및 직사각형 카드 스타일 --- */
+    .flashcard {
+      width: 350px;         /* 고정 가로 길이 */
+      height: 150px;        /* 세로 크기 축소: 150px */
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+      perspective: 1000px;  /* 3D 애니메이션을 위한 원근감 */
+    }
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    .flashcard.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+    .front, .back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+    }
+    .front {
+      background-color: #fff;
+    }
+    .back {
+      background-color: #0076ff;
+      color: #fff;
+      transform: rotateY(180deg);
+    }
+    /* --- 새 카드 추가 폼 --- */
     #cardFormContainer {
       display: none;
       margin-bottom: 20px;
@@ -106,16 +136,15 @@
       font-weight: bold;
       vertical-align: middle;
     }
-    /* 모든 텍스트 입력란 - 공용 클래스 (.input-field)를 사용하여 가로 길이 400px로 통일 */
+    /* 모든 텍스트 입력란 — 고정 가로 길이 400px */
     .input-field {
       padding: 5px;
       border: 1px solid #ccc;
       border-radius: 4px;
-      width: 400px; /* 고정 너비 */
+      width: 400px;
       vertical-align: middle;
       font-size: 1rem;
     }
-    /* textarea는 세로 조절만 (좌우 조절 안됨) */
     textarea.input-field {
       resize: vertical;
       height: 80px;
@@ -133,26 +162,16 @@
     .flashcard-input button:hover {
       background: #005bb5;
     }
-    
-    /* 플래시카드 영역 */
-    #flashcardsSection { }
+    /* --- 플래시카드 그리드 --- */
     .flashcards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(3, 350px);  /* 3열 고정 */
       gap: 20px;
+      justify-content: center;
     }
-    .flashcard {
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      overflow: hidden;
-      background-color: #fff;
-      display: flex;
-      flex-direction: column;
-    }
+    /* 카드 앞면 내부 (헤더와 "답 보기" 버튼) */
     .card-header {
       padding: 10px;
-      background: #fff;
-      border-bottom: 1px solid #e1e1e1;
       text-align: center;
     }
     .card-header .word-text {
@@ -174,11 +193,10 @@
       font-size: 0.9rem;
       color: #555;
     }
+    /* 카드 뒷면 내부 (답 내용) */
     .card-content {
       padding: 10px;
-      display: none;
-      background-color: #f0f0f0;
-      flex-grow: 1;
+      text-align: center;
     }
     .card-content .primary {
       font-size: 1.3rem;
@@ -189,13 +207,11 @@
       font-size: 1rem;
       line-height: 1.4;
     }
-    
     /* --- 내 단어장 (학습 내용) 영역 --- */
-    /* 내 단어장 영역을 가운데 정렬 */
     #myWordbookSection {
-      display: none;  /* 처음엔 숨김 */
-      width: 450px;   /* 내 단어장 영역 고정 너비 (입력란 400px + 여백) */
-      margin: 20px auto;  /* 가로 중앙 정렬 */
+      display: none;
+      width: 450px;
+      margin: 20px auto;
       background: #fff;
       border: 1px solid #e1e1e1;
       border-radius: 8px;
@@ -206,7 +222,6 @@
       margin-bottom: 10px;
       font-size: 1.2rem;
     }
-    /* 학습 내용 입력란 */
     #studyContent {
       padding: 5px;
       border: 1px solid #ccc;
@@ -233,7 +248,7 @@
   </style>
 </head>
 <body>
-  <!-- 헤더: 로고, 검색 입력, 네비게이션 (프로필 제외) -->
+  <!-- 헤더: 로고, 검색 입력, 네비게이션 (프로필 제거, 랜덤 정렬 삭제) -->
   <header>
     <div class="header-left">
       <div class="logo">Quizlet Clone</div>
@@ -243,7 +258,6 @@
       <ul>
         <li><a href="#" id="homeLink">홈</a></li>
         <li><button id="toggleCardFormBtn">카드 추가</button></li>
-        <li><button id="shuffleBtnHeader">랜덤 정렬</button></li>
         <li><a href="#" id="myWordbookLink">내 단어장</a></li>
       </ul>
     </nav>
@@ -255,7 +269,7 @@
     
     <!-- 카드 영역 -->
     <div id="flashcardsSection">
-      <!-- 카드 추가 폼 (초기엔 숨김, "카드 추가" 버튼으로 토글) -->
+      <!-- 카드 추가 폼 (토글 가능) -->
       <div id="cardFormContainer">
         <div class="flashcard-input">
           <h2>새 카드 추가</h2>
@@ -283,7 +297,7 @@
       
       <!-- 플래시카드 그리드 -->
       <div class="flashcards-grid" id="flashcardsGrid">
-        <!-- 카드 DOM은 JS에서 동적 생성됨 -->
+        <!-- 카드 DOM은 JavaScript를 통해 동적 생성 -->
       </div>
     </div>
     
@@ -297,12 +311,9 @@
     </div>
   </div>
   
-  <!-- JavaScript: 로컬스토리지 관리, 카드 생성/렌더링, 검색, 토글, 랜덤 정렬 및 내 단어장 기능 -->
+  <!-- JavaScript: 로컬스토리지, 카드 생성/렌더링, 검색, 네비게이션, 플립 애니메이션, 내 단어장 기능 -->
   <script>
-    // 전역 카드 데이터 (로컬스토리지와 동기화)
     let flashcardsData = [];
-    
-    // 기본 카드 3개 (로컬스토리지에 저장된 데이터가 없을 때 사용)
     const defaultCards = [
       {
         word: "apple",
@@ -329,24 +340,25 @@
     const searchInput = document.getElementById("searchInput");
     const cardFormContainer = document.getElementById("cardFormContainer");
     const toggleCardFormBtn = document.getElementById("toggleCardFormBtn");
-    const shuffleBtnHeader = document.getElementById("shuffleBtnHeader");
-    
-    // 내 단어장 관련
     const myWordbookLink = document.getElementById("myWordbookLink");
     const homeLink = document.getElementById("homeLink");
     const myWordbookSection = document.getElementById("myWordbookSection");
-    
     const studyContentTextArea = document.getElementById("studyContent");
     const saveStudyContentBtn = document.getElementById("saveStudyContentBtn");
     const loadStudyContentBtn = document.getElementById("loadStudyContentBtn");
     
-    // 카드 DOM 요소 생성 함수
     function createCardElement(cardData, index) {
       const card = document.createElement("div");
       card.classList.add("flashcard");
       card.dataset.index = index;
       
-      // 카드 상단 header (단어, 힌트, 답 토글 버튼)
+      const cardInner = document.createElement("div");
+      cardInner.classList.add("card-inner");
+      
+      // 앞면 (.front)
+      const front = document.createElement("div");
+      front.classList.add("front");
+      
       const header = document.createElement("div");
       header.classList.add("card-header");
       
@@ -355,8 +367,7 @@
       wordDiv.textContent = cardData.word;
       header.appendChild(wordDiv);
       
-      // 힌트 (존재할 경우)
-      if(cardData.hint && cardData.hint.trim() !== ""){
+      if (cardData.hint && cardData.hint.trim() !== "") {
         const hintBtn = document.createElement("button");
         hintBtn.classList.add("hint-btn");
         hintBtn.textContent = "힌트 보기";
@@ -379,13 +390,30 @@
           }
         });
       }
+      header.addEventListener("click", (e) => { e.stopPropagation(); });
+      front.appendChild(header);
       
-      // 답(토글) 버튼
-      const answerBtn = document.createElement("button");
-      answerBtn.textContent = "답 보기";
-      header.appendChild(answerBtn);
+      // "답 보기" 버튼 → 이 버튼으로 카드 플립 (토글)
+      const flipButton = document.createElement("button");
+      flipButton.textContent = "답 보기";
+      flipButton.style.display = "block";
+      flipButton.style.margin = "20px auto";
+      front.appendChild(flipButton);
       
-      // 카드 내용 영역 (답: 뜻 및 예문/상세)
+      flipButton.addEventListener("click", (e) => {
+        e.stopPropagation();
+        card.classList.toggle("flipped");
+        if(card.classList.contains("flipped")){
+          flipButton.textContent = "답 숨기기";
+        } else {
+          flipButton.textContent = "답 보기";
+        }
+      });
+      
+      // 뒷면 (.back)
+      const back = document.createElement("div");
+      back.classList.add("back");
+      
       const content = document.createElement("div");
       content.classList.add("card-content");
       
@@ -400,24 +428,23 @@
         detailDiv.textContent = cardData.detail;
         content.appendChild(detailDiv);
       }
+      back.appendChild(content);
       
-      answerBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        if (content.style.display === "none" || content.style.display === "") {
-          content.style.display = "block";
-          answerBtn.textContent = "답 숨기기";
-        } else {
-          content.style.display = "none";
-          answerBtn.textContent = "답 보기";
+      cardInner.appendChild(front);
+      cardInner.appendChild(back);
+      card.appendChild(cardInner);
+      
+      // 카드 영역의 빈 곳 클릭 시, 만약 카드가 flipped 상태이면 원래 상태로 되돌림.
+      card.addEventListener("click", () => {
+        if(card.classList.contains("flipped")){
+          card.classList.remove("flipped");
+          flipButton.textContent = "답 보기";
         }
       });
       
-      card.appendChild(header);
-      card.appendChild(content);
       return card;
     }
     
-    // 카드 데이터 배열을 기반으로 그리드 렌더링 함수
     function renderCards() {
       flashcardsGrid.innerHTML = "";
       flashcardsData.forEach((cardData, index) => {
@@ -426,7 +453,6 @@
       });
     }
     
-    // 로컬스토리지에서 카드 데이터 불러오기 (없으면 기본값 사용)
     function loadCardsFromStorage() {
       const stored = localStorage.getItem("flashcardsData");
       if (stored) {
@@ -441,12 +467,10 @@
       }
     }
     
-    // 로컬스토리지에 카드 데이터 저장
     function saveCardsToStorage() {
       localStorage.setItem("flashcardsData", JSON.stringify(flashcardsData));
     }
     
-    // 검색 기능: 입력한 검색어에 따라 카드 필터링 (단어 기준)
     searchInput.addEventListener("input", () => {
       const query = searchInput.value.trim().toLowerCase();
       document.querySelectorAll(".flashcard").forEach(card => {
@@ -455,14 +479,12 @@
       });
     });
     
-    // 폼 제출: 새 카드 추가
     cardForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      const word    = document.getElementById("cardFront").value.trim();
+      const word = document.getElementById("cardFront").value.trim();
       const meaning = document.getElementById("cardBack").value.trim();
-      const detail  = document.getElementById("cardDetail").value.trim();
-      const hint    = document.getElementById("cardHint").value.trim();
-      
+      const detail = document.getElementById("cardDetail").value.trim();
+      const hint = document.getElementById("cardHint").value.trim();
       if (word && meaning) {
         const newCard = { word, meaning, detail, hint };
         flashcardsData.push(newCard);
@@ -472,17 +494,6 @@
       }
     });
     
-    // 랜덤 정렬: Fisher-Yates Shuffle
-    shuffleBtnHeader.addEventListener("click", () => {
-      for (let i = flashcardsData.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [flashcardsData[i], flashcardsData[j]] = [flashcardsData[j], flashcardsData[i]];
-      }
-      saveCardsToStorage();
-      renderCards();
-    });
-    
-    // 카드 추가 폼 토글 (헤더의 "카드 추가" 버튼)
     toggleCardFormBtn.addEventListener("click", () => {
       if (cardFormContainer.style.display === "none" || cardFormContainer.style.display === "") {
         cardFormContainer.style.display = "block";
@@ -493,7 +504,6 @@
       }
     });
     
-    // 내 단어장(학습 내용) 저장/불러오기 기능
     saveStudyContentBtn.addEventListener("click", () => {
       const content = studyContentTextArea.value;
       localStorage.setItem("studyContent", content);
@@ -510,7 +520,6 @@
       }
     });
     
-    // 네비게이션: "홈" 클릭 시 플래시카드 영역 보이기, 내 단어장은 숨기기
     homeLink.addEventListener("click", (e) => {
       e.preventDefault();
       document.getElementById("flashcardsSection").style.display = "block";
@@ -518,7 +527,6 @@
       myWordbookSection.style.display = "none";
     });
     
-    // 네비게이션: "내 단어장" 클릭 시 내 단어장 영역 보이기, 플래시카드 영역 숨기기
     myWordbookLink.addEventListener("click", (e) => {
       e.preventDefault();
       document.getElementById("flashcardsSection").style.display = "none";
@@ -526,18 +534,15 @@
       myWordbookSection.style.display = "block";
     });
     
-    // 페이지 최초 실행 시: 로컬스토리지 데이터 로드 및 영역 표시
     loadCardsFromStorage();
     renderCards();
     document.getElementById("flashcardsSection").style.display = "block";
     myWordbookSection.style.display = "none";
     
-    // 페이지 최초 실행 시 학습 내용 자동 로드 (있으면)
     const savedStudyContent = localStorage.getItem("studyContent");
     if (savedStudyContent) {
       studyContentTextArea.value = savedStudyContent;
     }
-    
   </script>
 </body>
 </html>
