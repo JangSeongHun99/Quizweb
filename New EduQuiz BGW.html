@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>퀴즐렛 플래시카드 클론 - 통합 기능</title>
+  <title>퀴즐렛 플래시카드 클론 - 내 단어장 학습 내용</title>
   <style>
-    /* 기본 리셋 및 전반적인 스타일 */
+    /* 기본 리셋 */
     * {
       margin: 0;
       padding: 0;
@@ -25,28 +25,52 @@
       align-items: center;
       justify-content: space-between;
     }
-    header .logo {
+    /* 헤더 좌측: 로고와 검색 입력 한 줄에 배치 */
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+    .header-left .logo {
       font-size: 1.5rem;
       font-weight: bold;
       color: #222;
+      margin-right: 10px;
+    }
+    /* 상단 바에 위치한 검색 입력 (너비 400px, 회색 배경/텍스트) */
+    #searchInput {
+      padding: 8px;
+      width: 400px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+      background-color: #eee;
+      color: #666;
     }
     header nav ul {
       list-style: none;
       display: flex;
+      align-items: center;
     }
     header nav ul li {
       margin: 0 10px;
     }
-    header nav ul li a {
+    /* "홈", "내 단어장" 등 네비게이션 항목 */
+    header nav ul li a,
+    header nav ul li button {
       text-decoration: none;
-      color: #555;
-      padding: 5px;
+      font-size: 1rem;
+      padding: 5px 8px;
+      border: none;
+      background: none;
+      cursor: pointer;
       transition: color 0.3s;
+      color: #555;
     }
-    header nav ul li a:hover {
+    header nav ul li a:hover,
+    header nav ul li button:hover {
       color: #0076ff;
     }
-
+    
     .container {
       max-width: 1000px;
       margin: 20px auto;
@@ -57,12 +81,16 @@
       text-align: center;
       color: #0076ff;
     }
-
-    /* 입력 폼 영역 */
+    
+    /* --- 카드 영역 --- */
+    /* 카드 추가 폼 영역 (처음엔 숨김) */
+    #cardFormContainer {
+      display: none;
+      margin-bottom: 20px;
+    }
     .flashcard-input {
       background: #fff;
       padding: 20px;
-      margin-bottom: 20px;
       border: 1px solid #e1e1e1;
       border-radius: 8px;
     }
@@ -78,15 +106,17 @@
       font-weight: bold;
       vertical-align: middle;
     }
-    .flashcard-input input,
-    .flashcard-input textarea {
+    /* 모든 텍스트 입력란 - 공용 클래스 (.input-field)를 사용하여 가로 길이 400px로 통일 */
+    .input-field {
       padding: 5px;
       border: 1px solid #ccc;
       border-radius: 4px;
-      width: calc(100% - 90px);
+      width: 400px; /* 고정 너비 */
       vertical-align: middle;
+      font-size: 1rem;
     }
-    .flashcard-input textarea {
+    /* textarea는 세로 조절만 (좌우 조절 안됨) */
+    textarea.input-field {
       resize: vertical;
       height: 80px;
     }
@@ -98,51 +128,40 @@
       border: none;
       border-radius: 4px;
       transition: background 0.3s;
+      font-size: 1rem;
     }
     .flashcard-input button:hover {
       background: #005bb5;
     }
-    #shuffleBtn {
-      margin-top: 10px;
-      background: #28a745;
-    }
-    #shuffleBtn:hover {
-      background: #218838;
-    }
-
-    /* 플래시카드 그리드: 4개 이상의 카드 */
+    
+    /* 플래시카드 영역 */
+    #flashcardsSection { }
     .flashcards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 20px;
     }
-
-    /* 개별 카드 컨테이너 */
     .flashcard {
-      width: 100%;
-      height: 300px;
-      position: relative;
-      perspective: 1000px;
       border: 1px solid #ccc;
       border-radius: 8px;
       overflow: hidden;
       background-color: #fff;
+      display: flex;
+      flex-direction: column;
     }
-    /* 카드 상단 고정 영역 */
     .card-header {
-      position: relative;
-      height: 60px;
       padding: 10px;
       background: #fff;
       border-bottom: 1px solid #e1e1e1;
-      z-index: 2;
+      text-align: center;
     }
     .card-header .word-text {
       font-size: 1.2rem;
       font-weight: bold;
       margin-bottom: 5px;
     }
-    .hint-btn {
+    .card-header button {
+      margin: 5px 2px;
       padding: 5px 8px;
       background: #ffdc00;
       border: none;
@@ -150,68 +169,82 @@
       font-size: 0.9rem;
       cursor: pointer;
     }
-    .hint-content {
+    .card-header .hint-content {
       margin-top: 5px;
       font-size: 0.9rem;
       color: #555;
     }
-
-    /* 뒤집히는 영역: 헤더 아래 (카드내용 부분) */
-    .card-inner {
-      position: absolute;
-      top: 60px; /* 헤더 높이 */
-      left: 0;
-      width: 100%;
-      height: calc(100% - 60px);
-      transition: transform 0.6s;
-      transform-style: preserve-3d;
-    }
-    /* 뒤집힘 상태 */
-    .flashcard.flipped .card-inner {
-      transform: rotateY(180deg);
-    }
-    /* 앞면, 뒷면 영역 */
-    .card-face {
-      position: absolute;
-      width: 100%;
-      height: 100%;
+    .card-content {
       padding: 10px;
-      border: 1px solid #e1e1e1;
-      border-radius: 0 0 8px 8px;
-      backface-visibility: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
+      display: none;
       background-color: #f0f0f0;
+      flex-grow: 1;
     }
-    .card-face.back {
-      transform: rotateY(180deg);
-    }
-    .card-body p {
-      font-size: 1.1rem;
-    }
-    .card-body .primary {
+    .card-content .primary {
       font-size: 1.3rem;
       font-weight: bold;
       margin-bottom: 10px;
     }
-    .card-body .detail {
+    .card-content .detail {
       font-size: 1rem;
       line-height: 1.4;
+    }
+    
+    /* --- 내 단어장 (학습 내용) 영역 --- */
+    /* 내 단어장 영역을 가운데 정렬 */
+    #myWordbookSection {
+      display: none;  /* 처음엔 숨김 */
+      width: 450px;   /* 내 단어장 영역 고정 너비 (입력란 400px + 여백) */
+      margin: 20px auto;  /* 가로 중앙 정렬 */
+      background: #fff;
+      border: 1px solid #e1e1e1;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+    }
+    #myWordbookSection h2 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+    /* 학습 내용 입력란 */
+    #studyContent {
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 400px;
+      font-size: 1rem;
+      resize: vertical;
+      height: 120px;
+    }
+    #myWordbookSection button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #0076ff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-size: 1rem;
+    }
+    #myWordbookSection button:hover {
+      background: #005bb5;
     }
   </style>
 </head>
 <body>
-  <!-- 상단 네비게이션 영역 -->
+  <!-- 헤더: 로고, 검색 입력, 네비게이션 (프로필 제외) -->
   <header>
-    <div class="logo">Quizlet Clone</div>
+    <div class="header-left">
+      <div class="logo">Quizlet Clone</div>
+      <input type="text" id="searchInput" placeholder="검색어 입력 (단어 기준 검색)">
+    </div>
     <nav>
       <ul>
-        <li><a href="#">홈</a></li>
-        <li><a href="#">학습하기</a></li>
-        <li><a href="#">내 단어장</a></li>
-        <li><a href="#">프로필</a></li>
+        <li><a href="#" id="homeLink">홈</a></li>
+        <li><button id="toggleCardFormBtn">카드 추가</button></li>
+        <li><button id="shuffleBtnHeader">랜덤 정렬</button></li>
+        <li><a href="#" id="myWordbookLink">내 단어장</a></li>
       </ul>
     </nav>
   </header>
@@ -220,250 +253,291 @@
   <div class="container">
     <h1>플래시카드 공부</h1>
     
-    <!-- 사용자 단어 및 상세 내용 입력 영역 -->
-    <div class="flashcard-input">
-      <h2>새 카드 추가</h2>
-      <form id="cardForm">
-        <div>
-          <label for="cardFront">단어:</label>
-          <input type="text" id="cardFront" placeholder="단어 입력" required>
+    <!-- 카드 영역 -->
+    <div id="flashcardsSection">
+      <!-- 카드 추가 폼 (초기엔 숨김, "카드 추가" 버튼으로 토글) -->
+      <div id="cardFormContainer">
+        <div class="flashcard-input">
+          <h2>새 카드 추가</h2>
+          <form id="cardForm">
+            <div>
+              <label for="cardFront">단어:</label>
+              <input type="text" id="cardFront" class="input-field" placeholder="단어 입력" required>
+            </div>
+            <div>
+              <label for="cardBack">뜻:</label>
+              <input type="text" id="cardBack" class="input-field" placeholder="뜻 입력" required>
+            </div>
+            <div>
+              <label for="cardDetail">예문/상세:</label>
+              <textarea id="cardDetail" class="input-field" placeholder="예문이나 추가 설명 입력"></textarea>
+            </div>
+            <div>
+              <label for="cardHint">힌트:</label>
+              <textarea id="cardHint" class="input-field" placeholder="힌트 입력 (선택)"></textarea>
+            </div>
+            <button type="submit">카드 추가</button>
+          </form>
         </div>
-        <div>
-          <label for="cardBack">뜻:</label>
-          <input type="text" id="cardBack" placeholder="뜻 입력" required>
-        </div>
-        <div>
-          <label for="cardDetail">상세 내용:</label>
-          <textarea id="cardDetail" placeholder="예문이나 추가 설명 입력"></textarea>
-        </div>
-        <div>
-          <label for="cardHint">힌트:</label>
-          <input type="text" id="cardHint" placeholder="힌트 입력 (선택)">
-        </div>
-        <button type="submit">카드 추가</button>
-      </form>
-      <button id="shuffleBtn">랜덤 정렬</button>
+      </div>
+      
+      <!-- 플래시카드 그리드 -->
+      <div class="flashcards-grid" id="flashcardsGrid">
+        <!-- 카드 DOM은 JS에서 동적 생성됨 -->
+      </div>
     </div>
     
-    <!-- 플래시카드 그리드 영역 (초기 4개 카드) -->
-    <div class="flashcards-grid" id="flashcardsGrid">
-      <!-- 카드 1 -->
-      <div class="flashcard">
-        <div class="card-header">
-          <div class="word-text">apple</div>
-          <button class="hint-btn">힌트 보기</button>
-          <div class="hint-content" style="display: none;">빨갛고 달콤한 과일</div>
-        </div>
-        <div class="card-inner">
-          <div class="card-face front">
-            <div class="card-body">
-              <p>문제를 맞춰보세요!</p>
-            </div>
-          </div>
-          <div class="card-face back">
-            <div class="card-body">
-              <div class="primary">사과</div>
-              <div class="detail">사과는 영양가가 풍부하며 다양한 요리에 활용됩니다.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 카드 2 -->
-      <div class="flashcard">
-        <div class="card-header">
-          <div class="word-text">banana</div>
-          <button class="hint-btn">힌트 보기</button>
-          <div class="hint-content" style="display: none;">길고 노란 과일</div>
-        </div>
-        <div class="card-inner">
-          <div class="card-face front">
-            <div class="card-body">
-              <p>문제를 맞춰보세요!</p>
-            </div>
-          </div>
-          <div class="card-face back">
-            <div class="card-body">
-              <div class="primary">바나나</div>
-              <div class="detail">바나나는 에너지원으로 운동 전후 섭취하기 좋습니다.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 카드 3 -->
-      <div class="flashcard">
-        <div class="card-header">
-          <div class="word-text">cherry</div>
-          <button class="hint-btn">힌트 보기</button>
-          <div class="hint-content" style="display: none;">작고 붉은 과일</div>
-        </div>
-        <div class="card-inner">
-          <div class="card-face front">
-            <div class="card-body">
-              <p>문제를 맞춰보세요!</p>
-            </div>
-          </div>
-          <div class="card-face back">
-            <div class="card-body">
-              <div class="primary">체리</div>
-              <div class="detail">체리는 항산화 효과로 건강에 도움을 줍니다.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 카드 4 -->
-      <div class="flashcard">
-        <div class="card-header">
-          <div class="word-text">date</div>
-          <button class="hint-btn">힌트 보기</button>
-          <div class="hint-content" style="display: none;">달콤하고 쫄깃한 말린 과일</div>
-        </div>
-        <div class="card-inner">
-          <div class="card-face front">
-            <div class="card-body">
-              <p>문제를 맞춰보세요!</p>
-            </div>
-          </div>
-          <div class="card-face back">
-            <div class="card-body">
-              <div class="primary">대추</div>
-              <div class="detail">대추는 영양가 높고 건강에 좋은 말린 과일입니다.</div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- 내 단어장 (학습 내용) 영역 -->
+    <div id="myWordbookSection">
+      <h2>내 단어장</h2>
+      <textarea id="studyContent" placeholder="학습한 내용을 입력하세요"></textarea>
+      <br>
+      <button id="saveStudyContentBtn">학습 내용 저장</button>
+      <button id="loadStudyContentBtn">학습 내용 불러오기</button>
     </div>
   </div>
   
-  <!-- JavaScript: 카드 뒤집기, 힌트 토글, 새 카드 추가, 랜덤 정렬 -->
+  <!-- JavaScript: 로컬스토리지 관리, 카드 생성/렌더링, 검색, 토글, 랜덤 정렬 및 내 단어장 기능 -->
   <script>
-    // 카드 뒤집기 기능: 뒤집히는 영역(.card-inner)을 클릭하면 부모 카드에 flipped 클래스를 토글합니다.
-    function addFlipEvent(card) {
-      card.addEventListener('click', () => {
-        card.parentNode.classList.toggle('flipped');
+    // 전역 카드 데이터 (로컬스토리지와 동기화)
+    let flashcardsData = [];
+    
+    // 기본 카드 3개 (로컬스토리지에 저장된 데이터가 없을 때 사용)
+    const defaultCards = [
+      {
+        word: "apple",
+        meaning: "사과",
+        detail: "사과는 영양가가 풍부하며 다양한 요리에 활용됩니다.",
+        hint: "빨갛고 달콤한 과일"
+      },
+      {
+        word: "banana",
+        meaning: "바나나",
+        detail: "바나나는 에너지원으로 운동 전후 섭취하기 좋습니다.",
+        hint: "길고 노란 과일"
+      },
+      {
+        word: "cherry",
+        meaning: "체리",
+        detail: "체리는 항산화 효과로 건강에 도움을 줍니다.",
+        hint: "작고 붉은 과일"
+      }
+    ];
+    
+    const flashcardsGrid = document.getElementById("flashcardsGrid");
+    const cardForm = document.getElementById("cardForm");
+    const searchInput = document.getElementById("searchInput");
+    const cardFormContainer = document.getElementById("cardFormContainer");
+    const toggleCardFormBtn = document.getElementById("toggleCardFormBtn");
+    const shuffleBtnHeader = document.getElementById("shuffleBtnHeader");
+    
+    // 내 단어장 관련
+    const myWordbookLink = document.getElementById("myWordbookLink");
+    const homeLink = document.getElementById("homeLink");
+    const myWordbookSection = document.getElementById("myWordbookSection");
+    
+    const studyContentTextArea = document.getElementById("studyContent");
+    const saveStudyContentBtn = document.getElementById("saveStudyContentBtn");
+    const loadStudyContentBtn = document.getElementById("loadStudyContentBtn");
+    
+    // 카드 DOM 요소 생성 함수
+    function createCardElement(cardData, index) {
+      const card = document.createElement("div");
+      card.classList.add("flashcard");
+      card.dataset.index = index;
+      
+      // 카드 상단 header (단어, 힌트, 답 토글 버튼)
+      const header = document.createElement("div");
+      header.classList.add("card-header");
+      
+      const wordDiv = document.createElement("div");
+      wordDiv.classList.add("word-text");
+      wordDiv.textContent = cardData.word;
+      header.appendChild(wordDiv);
+      
+      // 힌트 (존재할 경우)
+      if(cardData.hint && cardData.hint.trim() !== ""){
+        const hintBtn = document.createElement("button");
+        hintBtn.classList.add("hint-btn");
+        hintBtn.textContent = "힌트 보기";
+        header.appendChild(hintBtn);
+        
+        const hintContent = document.createElement("div");
+        hintContent.classList.add("hint-content");
+        hintContent.style.display = "none";
+        hintContent.textContent = cardData.hint;
+        header.appendChild(hintContent);
+        
+        hintBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (hintContent.style.display === "none" || hintContent.style.display === "") {
+            hintContent.style.display = "block";
+            hintBtn.textContent = "힌트 숨기기";
+          } else {
+            hintContent.style.display = "none";
+            hintBtn.textContent = "힌트 보기";
+          }
+        });
+      }
+      
+      // 답(토글) 버튼
+      const answerBtn = document.createElement("button");
+      answerBtn.textContent = "답 보기";
+      header.appendChild(answerBtn);
+      
+      // 카드 내용 영역 (답: 뜻 및 예문/상세)
+      const content = document.createElement("div");
+      content.classList.add("card-content");
+      
+      const primaryDiv = document.createElement("div");
+      primaryDiv.classList.add("primary");
+      primaryDiv.textContent = cardData.meaning;
+      content.appendChild(primaryDiv);
+      
+      if (cardData.detail && cardData.detail.trim() !== "") {
+        const detailDiv = document.createElement("div");
+        detailDiv.classList.add("detail");
+        detailDiv.textContent = cardData.detail;
+        content.appendChild(detailDiv);
+      }
+      
+      answerBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (content.style.display === "none" || content.style.display === "") {
+          content.style.display = "block";
+          answerBtn.textContent = "답 숨기기";
+        } else {
+          content.style.display = "none";
+          answerBtn.textContent = "답 보기";
+        }
+      });
+      
+      card.appendChild(header);
+      card.appendChild(content);
+      return card;
+    }
+    
+    // 카드 데이터 배열을 기반으로 그리드 렌더링 함수
+    function renderCards() {
+      flashcardsGrid.innerHTML = "";
+      flashcardsData.forEach((cardData, index) => {
+        const cardElement = createCardElement(cardData, index);
+        flashcardsGrid.appendChild(cardElement);
       });
     }
     
-    // 기존 카드들에 뒤집기 이벤트 추가 (카드 헤더는 제외하고 뒤집히는 영역만)
-    document.querySelectorAll('.card-inner').forEach(inner => {
-      inner.addEventListener('click', () => {
-        inner.parentNode.classList.toggle('flipped');
-      });
-    });
-
-    // 각 카드 헤더 안의 힌트 버튼: 클릭 시 힌트 내용 토글 (이벤트 전파 중단)
-    function addHintEvent(btn) {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();  // 카드 전체 뒤집힘 방지
-        let hintContent = btn.nextElementSibling;
-        if (hintContent.style.display === 'none' || hintContent.style.display === '') {
-          hintContent.style.display = 'block';
-          btn.textContent = '힌트 숨기기';
-        } else {
-          hintContent.style.display = 'none';
-          btn.textContent = '힌트 보기';
+    // 로컬스토리지에서 카드 데이터 불러오기 (없으면 기본값 사용)
+    function loadCardsFromStorage() {
+      const stored = localStorage.getItem("flashcardsData");
+      if (stored) {
+        try {
+          flashcardsData = JSON.parse(stored);
+        } catch (e) {
+          console.error("저장된 카드 데이터를 불러오는 중 오류 발생:", e);
+          flashcardsData = defaultCards;
         }
-      });
+      } else {
+        flashcardsData = defaultCards;
+      }
     }
-    document.querySelectorAll('.hint-btn').forEach(btn => {
-      addHintEvent(btn);
+    
+    // 로컬스토리지에 카드 데이터 저장
+    function saveCardsToStorage() {
+      localStorage.setItem("flashcardsData", JSON.stringify(flashcardsData));
+    }
+    
+    // 검색 기능: 입력한 검색어에 따라 카드 필터링 (단어 기준)
+    searchInput.addEventListener("input", () => {
+      const query = searchInput.value.trim().toLowerCase();
+      document.querySelectorAll(".flashcard").forEach(card => {
+        const word = card.querySelector(".word-text").textContent.trim().toLowerCase();
+        card.style.display = word.includes(query) ? "" : "none";
+      });
     });
-
-    // 사용자 입력으로 새 카드 추가 기능
-    const form = document.getElementById('cardForm');
-    const flashcardsGrid = document.getElementById('flashcardsGrid');
-
-    form.addEventListener('submit', (e) => {
+    
+    // 폼 제출: 새 카드 추가
+    cardForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      const word      = document.getElementById('cardFront').value.trim();
-      const meaning   = document.getElementById('cardBack').value.trim();
-      const detail    = document.getElementById('cardDetail').value.trim();
-      const hint      = document.getElementById('cardHint').value.trim();
-
+      const word    = document.getElementById("cardFront").value.trim();
+      const meaning = document.getElementById("cardBack").value.trim();
+      const detail  = document.getElementById("cardDetail").value.trim();
+      const hint    = document.getElementById("cardHint").value.trim();
+      
       if (word && meaning) {
-        // 카드 생성
-        let card = document.createElement('div');
-        card.classList.add('flashcard');
-
-        // 카드 헤더 (단어 및 힌트 버튼/내용)
-        let header = document.createElement('div');
-        header.classList.add('card-header');
-        let wordDiv = document.createElement('div');
-        wordDiv.classList.add('word-text');
-        wordDiv.textContent = word;
-        header.appendChild(wordDiv);
-
-        // 힌트가 있다면 추가
-        if (hint) {
-          let hintBtn = document.createElement('button');
-          hintBtn.classList.add('hint-btn');
-          hintBtn.textContent = '힌트 보기';
-          let hintDiv = document.createElement('div');
-          hintDiv.classList.add('hint-content');
-          hintDiv.style.display = 'none';
-          hintDiv.textContent = hint;
-          header.appendChild(hintBtn);
-          header.appendChild(hintDiv);
-          addHintEvent(hintBtn);
-        }
-        card.appendChild(header);
-
-        // 카드 내용 부분 (뒤집히는 영역)
-        let inner = document.createElement('div');
-        inner.classList.add('card-inner');
-
-        // 앞면: 기본 메시지
-        let frontFace = document.createElement('div');
-        frontFace.classList.add('card-face', 'front');
-        let frontBody = document.createElement('div');
-        frontBody.classList.add('card-body');
-        let frontMsg = document.createElement('p');
-        frontMsg.textContent = "문제를 맞춰보세요!";
-        frontBody.appendChild(frontMsg);
-        frontFace.appendChild(frontBody);
-
-        // 뒷면: 의미와 상세 내용 표시
-        let backFace = document.createElement('div');
-        backFace.classList.add('card-face', 'back');
-        let backBody = document.createElement('div');
-        backBody.classList.add('card-body');
-        let primaryDiv = document.createElement('div');
-        primaryDiv.classList.add('primary');
-        primaryDiv.textContent = meaning;
-        backBody.appendChild(primaryDiv);
-        if (detail) {
-          let detailDiv = document.createElement('div');
-          detailDiv.classList.add('detail');
-          detailDiv.textContent = detail;
-          backBody.appendChild(detailDiv);
-        }
-        backFace.appendChild(backBody);
-
-        inner.appendChild(frontFace);
-        inner.appendChild(backFace);
-        card.appendChild(inner);
-
-        // 뒤집기 이벤트 등록: 카드 내용 영역 클릭 시 뒤집힘
-        inner.addEventListener('click', () => {
-          card.classList.toggle('flipped');
-        });
-
-        flashcardsGrid.appendChild(card);
-        form.reset();
+        const newCard = { word, meaning, detail, hint };
+        flashcardsData.push(newCard);
+        saveCardsToStorage();
+        renderCards();
+        cardForm.reset();
       }
     });
-
-    // 랜덤 정렬 기능: Fisher-Yates Shuffle 알고리즘
-    const shuffleBtn = document.getElementById('shuffleBtn');
-    shuffleBtn.addEventListener('click', () => {
-      const cards = Array.from(flashcardsGrid.children);
-      for (let i = cards.length - 1; i > 0; i--) {
+    
+    // 랜덤 정렬: Fisher-Yates Shuffle
+    shuffleBtnHeader.addEventListener("click", () => {
+      for (let i = flashcardsData.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        flashcardsGrid.insertBefore(cards[j], cards[i].nextSibling);
+        [flashcardsData[i], flashcardsData[j]] = [flashcardsData[j], flashcardsData[i]];
+      }
+      saveCardsToStorage();
+      renderCards();
+    });
+    
+    // 카드 추가 폼 토글 (헤더의 "카드 추가" 버튼)
+    toggleCardFormBtn.addEventListener("click", () => {
+      if (cardFormContainer.style.display === "none" || cardFormContainer.style.display === "") {
+        cardFormContainer.style.display = "block";
+        toggleCardFormBtn.textContent = "폼 숨기기";
+      } else {
+        cardFormContainer.style.display = "none";
+        toggleCardFormBtn.textContent = "카드 추가";
       }
     });
+    
+    // 내 단어장(학습 내용) 저장/불러오기 기능
+    saveStudyContentBtn.addEventListener("click", () => {
+      const content = studyContentTextArea.value;
+      localStorage.setItem("studyContent", content);
+      alert("학습 내용이 저장되었습니다.");
+    });
+    
+    loadStudyContentBtn.addEventListener("click", () => {
+      const content = localStorage.getItem("studyContent");
+      if (content) {
+        studyContentTextArea.value = content;
+        alert("저장된 학습 내용을 불러왔습니다.");
+      } else {
+        alert("저장된 학습 내용이 없습니다.");
+      }
+    });
+    
+    // 네비게이션: "홈" 클릭 시 플래시카드 영역 보이기, 내 단어장은 숨기기
+    homeLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      document.getElementById("flashcardsSection").style.display = "block";
+      cardFormContainer.style.display = "none";
+      myWordbookSection.style.display = "none";
+    });
+    
+    // 네비게이션: "내 단어장" 클릭 시 내 단어장 영역 보이기, 플래시카드 영역 숨기기
+    myWordbookLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      document.getElementById("flashcardsSection").style.display = "none";
+      cardFormContainer.style.display = "none";
+      myWordbookSection.style.display = "block";
+    });
+    
+    // 페이지 최초 실행 시: 로컬스토리지 데이터 로드 및 영역 표시
+    loadCardsFromStorage();
+    renderCards();
+    document.getElementById("flashcardsSection").style.display = "block";
+    myWordbookSection.style.display = "none";
+    
+    // 페이지 최초 실행 시 학습 내용 자동 로드 (있으면)
+    const savedStudyContent = localStorage.getItem("studyContent");
+    if (savedStudyContent) {
+      studyContentTextArea.value = savedStudyContent;
+    }
+    
   </script>
 </body>
 </html>
