@@ -62,7 +62,7 @@
     .search-bar {
       margin: 0 20px;
       flex-grow: 1;
-      max-width: 300px;
+      max-width: 400px;
     }
 
     .search-bar input {
@@ -178,6 +178,82 @@
         transform: translateY(0);
       }
     }
+
+    .quiz-section {  
+      display: none;
+      margin-top: 40px;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 30px;
+      border-radius: 25px;
+      font-size: 1.5rem;
+      line-height: 2.2rem;
+    }
+
+    .quiz-section button {
+      font-size: 1.2rem;
+      margin-top: 15px;
+    }
+
+    .quiz-section {    /*퀴즈창 배경 박스*/
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+
+  width: 1000px;    
+  height: 600px;      
+  margin: 80px auto;
+  background: white;
+  padding: 60px;     
+  border-radius: 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+}
+
+.quiz-section #quizWord {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-top: 30px;
+}
+
+.quiz-section #quizHint,
+.quiz-section #quizAnswer {
+  font-size: 2.0rem;
+  margin-top: 2px;
+}
+
+.quiz-section button {
+  padding: 12px 35px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 12px;
+  background-color: #007aff;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.quiz-section button:hover {
+  background-color: #005ecc;
+}
+
+.quiz-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: auto;
+  padding-top: 30px;
+}
+
+.quiz-buttons button {
+  padding: 12px 20px;
+  font-size: 1rem;
+  width: auto;
+  max-width: none;
+  border-radius: 12px;
+  flex: 1;
+  max-width: 150px;
+}
   </style>
 </head>
 <body>
@@ -189,6 +265,7 @@
     <div class="nav-buttons">
       <button onclick="showPanel('main')">메인화면</button>
       <button onclick="showPanel('storage')">카드 저장소</button>
+      <button onclick="toggleQuiz()">문제 풀기</button>
     </div>
   </header>
 
@@ -201,11 +278,23 @@
       <button class="add-card" onclick="addCard()">카드 추가</button>
       <div class="cards" id="cardContainer"></div>
     </div>
-
     <div class="panel" id="storage">
       <div class="cards" id="storageCards"></div>
     </div>
   </div>
+
+  <div class="container">
+    <div class="quiz-section" id="quizSection">
+  <div id="quizWord"></div>
+  <div id="quizHint"></div>
+  <div id="quizAnswer"></div>
+
+  <div class="quiz-buttons">
+    <button onclick="showQuizHint()">힌트 보기</button>
+    <button onclick="showQuizAnswer()">답 보기</button>
+    <button onclick="nextQuiz()">다음 문제</button>
+  </div>
+</div>
 
   <script>
     const wordInput = document.getElementById('word');
@@ -215,8 +304,14 @@
     const searchInput = document.getElementById('searchInput');
     const cardContainer = document.getElementById('cardContainer');
     const storageCards = document.getElementById('storageCards');
+    const quizSection = document.getElementById('quizSection');
+    const quizWord = document.getElementById('quizWord');
+    const quizHint = document.getElementById('quizHint');
+    const quizAnswer = document.getElementById('quizAnswer');
 
     let cards = JSON.parse(localStorage.getItem('cards')) || [];
+    let currentQuizIndex = 0;
+
     window.onload = () => {
       renderCards();
     };
@@ -226,7 +321,16 @@
         panel.classList.remove('active');
       });
       document.getElementById(panelId).classList.add('active');
+      quizSection.style.display = 'none';
       if (panelId === 'storage') renderStorage();
+    }
+
+    function toggleQuiz() {
+      quizSection.style.display = quizSection.style.display === 'none' ? 'block' : 'none';
+      if (quizSection.style.display === 'block') {
+        currentQuizIndex = 0;
+        displayQuiz();
+      }
     }
 
     function addCard() {
@@ -257,9 +361,7 @@
           div.className = 'card';
           div.innerHTML = `
             <h3>${card.word}</h3>
-            <div class="favorite ${card.favorite ? '' : 'inactive'}" onclick="toggleFavorite(${index}, this)">
-              ★
-            </div>
+            <div class="favorite ${card.favorite ? '' : 'inactive'}" onclick="toggleFavorite(${index}, this)">★</div>
             <button onclick="toggleHint(this)">힌트 보기</button>
             <div class="hint">${card.hint}</div>
             <button onclick="deleteCard(${index})">삭제</button>
@@ -275,10 +377,8 @@
         div.className = 'card';
         div.innerHTML = `
           <h3>${card.word}</h3>
-          <div class="favorite ${card.favorite ? '' : 'inactive'}" onclick="toggleFavorite(${cards.indexOf(card)}, this)">
-            ★
-          </div>
-          <p><strong>뜻:</strong> ${card.meaning}</p>
+          <div class="favorite ${card.favorite ? '' : 'inactive'}" onclick="toggleFavorite(${cards.indexOf(card)}, this)">★</div>
+          <p><strong>뜻:  </strong> ${card.meaning}</p>
           <p><strong>예문:</strong> ${card.example}</p>
           <p><strong>힌트:</strong> ${card.hint}</p>
         `;
@@ -298,10 +398,41 @@
       renderStorage();
     }
 
-    function toggleFavorite(index, el) {
+        function toggleFavorite(index, el) {
       cards[index].favorite = !cards[index].favorite;
-      el.classList.toggle('inactive', !cards[index].favorite);
+      el.classList.toggle('inactive');
       localStorage.setItem('cards', JSON.stringify(cards));
+    }
+
+    function displayQuiz() {
+      if (cards.length === 0) {
+        quizWord.textContent = '등록된 카드가 없습니다.';
+        quizHint.textContent = '';
+        quizAnswer.textContent = '';
+        return;
+      }
+
+      const card = cards[currentQuizIndex];
+      quizWord.textContent = card.word;
+      quizHint.textContent = '';
+      quizAnswer.textContent = '';
+    }
+
+    function showQuizHint() {
+      if (cards.length === 0) return;
+      quizHint.textContent = `${cards[currentQuizIndex].hint}`;
+    }
+
+    function showQuizAnswer() {
+      if (cards.length === 0) return;
+      const card = cards[currentQuizIndex];
+      quizAnswer.innerHTML = `${card.meaning}`;
+    }
+
+    function nextQuiz() {
+      if (cards.length === 0) return;
+      currentQuizIndex = (currentQuizIndex + 1) % cards.length;
+      displayQuiz();
     }
   </script>
 </body>
