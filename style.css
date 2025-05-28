@@ -1,0 +1,233 @@
+body {
+    font-family: Arial, sans-serif; /* Choose a font that matches */
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #d6e0f5, #f5f9ff);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+header {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 10px 0; /* Vertical padding */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle shadow */
+    position: sticky; /* Makes the header stick at the top when scrolling */
+    top: 0;
+    z-index: 1000; /* Ensures header stays on top of other content */
+}
+
+.header-container {
+    width: 100%;
+    max-width: 1200px; /* Or your desired max width for content */
+    margin: 0 auto; /* Center the container */
+    padding: 0 20px; /* Horizontal padding inside the container */
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.8em; /* Adjust as needed */
+    font-weight: bold;
+    color: #7b68ee; /* Quizlet purple color */
+    text-decoration: none;
+    margin-right: 30px; /* Space between logo and nav */
+}
+
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.header-right a {
+    text-decoration: none;
+    margin-left: 15px;
+    font-size: 0.95em;
+    font-weight: 500;
+}
+
+.create-button {
+    color: #333; /* Or a specific color */
+}
+
+.login-button {
+    background-color: #f0f0f0; /* Light grey, or transparent */
+    color: #333;
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd; /* Optional border */
+}
+.login-button:hover {
+    background-color: #e0e0e0;
+}
+
+main {
+    width: 100%;
+    max-width: 1200px; /* Adjust as needed */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.hero-section {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.hero-section h1 {
+    font-size: 2.5em; /* Adjust as needed */
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.hero-section p {
+    font-size: 1.1em;
+    color: #555;
+    max-width: 700px;
+    margin: 0 auto 20px auto; /* Center the paragraph */
+}
+
+.signup-button { /* Example styling if you add the button */
+    background-color: #7b68ee; /* Purple color from screenshot */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.teacher-link { /* Example styling if you add the teacher link */
+    display: block;
+    margin-top: 10px;
+    color: #7b68ee;
+    text-decoration: none;
+}
+
+.study-options {
+    display: flex;
+    justify-content: center; /* Centers the cards */
+    gap: 30px; /* Space between cards */
+    flex-wrap: wrap; /* Allows cards to wrap on smaller screens */
+}
+
+.study-card {
+    width: 300px; /* Adjust width as needed */
+    min-height: 350px; /* Adjust height as needed */
+    border-radius: 15px;
+    padding: 20px;
+    box-sizing: border-box;
+    text-decoration: none;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease; /* For hover effect */
+}
+
+.study-card:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+}
+
+.study-card h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.8em; /* Adjust as needed */
+    text-align: center;
+}
+
+.card-content {
+    flex-grow: 1;
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Specific card styles */
+.learn-card {
+    background-color: #a0e0ff; /* Light blue from screenshot */
+}
+.learn-card h2 {
+    color: #007bff; /* Adjust to match title color */
+}
+
+.learn-card .card-content img {
+    max-width: 80%;
+    height: auto;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.learn-card .placeholder-text {
+    color: #aaa; /* Light grey for placeholder */
+    font-size: 0.9em;
+    text-align: center;
+    border-top: 1px solid #eee; /* Mimic the input line */
+    padding-top: 10px;
+    width: 80%;
+}
+
+
+.flashcard-card {
+    background-color: #4a48c7; /* Dark blue from screenshot */
+}
+
+.flashcard-card h2 {
+    color: white;
+}
+
+.flashcard-card .card-content {
+    /* Content already centered by .card-content styles */
+}
+
+.flashcard-example {
+    background-color: white; /* Card itself is white */
+    color: #333;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 80%; /* Adjust size of inner flashcard */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Shadow for the flashcard */
+}
+
+.flashcard-example span {
+    display: block;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.flashcard-example img {
+    max-width: 100px; /* Adjust image size */
+    height: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .study-options {
+        flex-direction: column;
+        align-items: center;
+    }
+    .study-card {
+        width: 80%; /* Make cards wider on smaller screens */
+        max-width: 350px; /* But not too wide */
+        margin-bottom: 20px;
+    }
+    .hero-section h1 {
+        font-size: 2em;
+    }
+}
