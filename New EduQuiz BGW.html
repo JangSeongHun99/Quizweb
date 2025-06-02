@@ -78,9 +78,9 @@
         }
 
         #studyPanel {
-            display: none; /* 기본적으로 숨김 */
+            display: none;
             position: absolute;
-            top: calc(100% + 5px); /* 헤더 바로 아래에 위치하도록 수정 */
+            top: calc(100% + 5px);
             right: 20px;
             width: 450px;
             background: #fff;
@@ -89,15 +89,33 @@
             padding: 20px;
             z-index: 100;
             box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            /* margin-top 제거 (이미 top으로 위치 조정) */
         }
 
-        #studyPanel h2 { margin-bottom: 10px; font-size: 1.2rem; }
+        #wrongAnswersPanel {
+            display: none;
+            position: absolute;
+            top: calc(100% + 5px);
+            right: 20px;
+            width: 500px;
+            background: #fff;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            padding: 20px;
+            z-index: 100;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .panel h2 { 
+            margin-bottom: 15px; 
+            font-size: 1.2rem; 
+            color: #333;
+        }
+
         #studyContent {
             padding: 5px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            width: calc(100% - 12px); /* padding 고려하여 너비 조정 */
+            width: calc(100% - 12px);
             font-size: 1rem;
             resize: vertical;
             height: 120px;
@@ -117,12 +135,14 @@
         }
 
         #addStudyContentBtn:hover { background: #005bb5; }
+
         #studyNotesList {
             margin-top: 20px;
             text-align: left;
             list-style: decimal inside;
-            padding-left: 0; /* 기본 padding 제거 */
+            padding-left: 0;
         }
+
         #studyNotesList li {
             background-color: #f9f9f9;
             border: 1px solid #eee;
@@ -133,6 +153,7 @@
             justify-content: space-between;
             align-items: center;
         }
+
         #studyNotesList li button {
             background-color: #ff4d4f;
             color: white;
@@ -142,10 +163,96 @@
             cursor: pointer;
             font-size: 0.85em;
         }
+
         #studyNotesList li button:hover {
             background-color: #d9363e;
         }
 
+        /* 오답노트 스타일 */
+        #wrongAnswersList {
+            margin-top: 15px;
+            text-align: left;
+            list-style: none;
+            padding-left: 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        #wrongAnswersList li {
+            background-color: #fff5f5;
+            border: 1px solid #ffcdd2;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .wrong-answer-content {
+            flex: 1;
+        }
+
+        .wrong-answer-word {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #d32f2f;
+            margin-bottom: 5px;
+        }
+
+        .wrong-answer-details {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .wrong-answer-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .retry-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .retry-btn:hover {
+            background-color: #45a049;
+        }
+
+        .delete-wrong-btn {
+            background-color: #ff4d4f;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .delete-wrong-btn:hover {
+            background-color: #d9363e;
+        }
+
+        .clear-all-wrong-btn {
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .clear-all-wrong-btn:hover {
+            background-color: #f57c00;
+        }
 
         .container {
             width: 100%;
@@ -266,7 +373,7 @@
             .my-quiz-container { width: 90%; padding: 15px; }
             .my-word-to-learn h2 { font-size: 1.8em; }
             .my-option { padding: 12px; font-size: 0.9em; }
-            #studyPanel { width: 90%; max-width: 400px; right: 5%; }
+            #studyPanel, #wrongAnswersPanel { width: 90%; max-width: 400px; right: 5%; }
         }
 
         @media (max-width: 480px) {
@@ -276,8 +383,7 @@
             .my-question-section { flex-direction: column; align-items: center; }
             .my-word-to-learn { text-align: center; }
             .my-word-to-learn h2 { font-size: 1.6em; }
-             #studyPanel { width: calc(100% - 40px) ; right: 20px; }
-
+            #studyPanel, #wrongAnswersPanel { width: calc(100% - 40px) ; right: 20px; }
         }
     </style>
 </head>
@@ -291,13 +397,24 @@
             <div class="header-right">
                 <a href="#" id="homeLink">홈</a>
                 <a href="#" id="studyNav">학습내용</a>
+                <a href="#" id="wrongAnswersNav">오답노트</a>
             </div>
         </div>
-        <div id="studyPanel">
+        
+        <!-- 학습내용 패널 -->
+        <div id="studyPanel" class="panel">
             <h2>학습 내용 저장 및 추가</h2>
             <textarea id="studyContent" placeholder="학습한 내용을 입력하세요"></textarea><br>
             <button id="addStudyContentBtn">학습 내용 추가</button>
             <ul id="studyNotesList"></ul>
+        </div>
+
+        <!-- 오답노트 패널 -->
+        <div id="wrongAnswersPanel" class="panel">
+            <h2>오답노트 📝</h2>
+            <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">틀린 문제들이 자동으로 저장됩니다.</p>
+            <ul id="wrongAnswersList"></ul>
+            <button id="clearAllWrongBtn" class="clear-all-wrong-btn">모든 오답 삭제</button>
         </div>
     </header>
 
@@ -349,13 +466,21 @@
 
         const wordPool = [];
         
-        // 학습 내용 관련 DOM 요소
+        // 로컬 스토리지 키 상수
+        const LOCAL_STORAGE_STUDY_NOTES_KEY = 'engVocabStudyNotes';
+        const LOCAL_STORAGE_WRONG_ANSWERS_KEY = 'engVocabWrongAnswers';
+        
+        // DOM 요소 참조
         const studyNav = document.getElementById("studyNav");
         const studyPanel = document.getElementById("studyPanel");
         const studyContent = document.getElementById("studyContent");
         const addStudyContentBtn = document.getElementById("addStudyContentBtn");
         const studyNotesList = document.getElementById("studyNotesList");
-        const LOCAL_STORAGE_STUDY_NOTES_KEY = 'engVocabStudyNotes';
+        
+        const wrongAnswersNav = document.getElementById("wrongAnswersNav");
+        const wrongAnswersPanel = document.getElementById("wrongAnswersPanel");
+        const wrongAnswersList = document.getElementById("wrongAnswersList");
+        const clearAllWrongBtn = document.getElementById("clearAllWrongBtn");
 
         function populateWordPool(count = 200) {
             wordPool.length = 0;
@@ -417,6 +542,136 @@
             };
         }
 
+        // 특정 단어로 퀴즈 생성 (오답노트에서 재시도할 때 사용)
+        function generateQuizFromWord(word, correctAnswer) {
+            let otherKoreanMeanings = baseWords
+                .filter(pair => pair.ko !== correctAnswer)
+                .map(pair => pair.ko);
+            
+            otherKoreanMeanings = [...new Set(otherKoreanMeanings)];
+            otherKoreanMeanings.sort(() => Math.random() - 0.5);
+
+            const choices = otherKoreanMeanings.slice(0, 3);
+            choices.push(correctAnswer);
+            choices.sort(() => Math.random() - 0.5);
+
+            return {
+                id: `retry_quiz_${Date.now()}_${Math.random().toString(16).slice(2)}`,
+                word: word,
+                choices: choices,
+                answer: correctAnswer,
+                feedbackCorrect: "정답입니다!",
+                feedbackIncorrect: "오답입니다."
+            };
+        }
+
+        // 오답 저장 함수
+        function saveWrongAnswer(word, correctAnswer, userAnswer) {
+            const wrongAnswers = JSON.parse(localStorage.getItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY)) || [];
+            
+            // 중복 체크 (같은 단어가 이미 있으면 업데이트)
+            const existingIndex = wrongAnswers.findIndex(item => item.word === word);
+            
+            const wrongAnswerData = {
+                word: word,
+                correctAnswer: correctAnswer,
+                userAnswer: userAnswer,
+                timestamp: new Date().toLocaleDateString('ko-KR')
+            };
+
+            if (existingIndex !== -1) {
+                wrongAnswers[existingIndex] = wrongAnswerData; // 기존 항목 업데이트
+            } else {
+                wrongAnswers.push(wrongAnswerData); // 새 항목 추가
+            }
+
+            localStorage.setItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY, JSON.stringify(wrongAnswers));
+        }
+
+        // 오답노트 렌더링 함수
+        function renderWrongAnswers() {
+            wrongAnswersList.innerHTML = "";
+            const wrongAnswers = JSON.parse(localStorage.getItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY)) || [];
+            
+            if (wrongAnswers.length === 0) {
+                const emptyMessage = document.createElement("li");
+                emptyMessage.style.textAlign = "center";
+                emptyMessage.style.color = "#999";
+                emptyMessage.style.fontStyle = "italic";
+                emptyMessage.style.border = "none";
+                emptyMessage.style.background = "transparent";
+                emptyMessage.textContent = "아직 틀린 문제가 없습니다! 🎉";
+                wrongAnswersList.appendChild(emptyMessage);
+                return;
+            }
+
+            wrongAnswers.forEach((item, index) => {
+                const listItem = document.createElement("li");
+                
+                const contentDiv = document.createElement("div");
+                contentDiv.className = "wrong-answer-content";
+                
+                const wordDiv = document.createElement("div");
+                wordDiv.className = "wrong-answer-word";
+                wordDiv.textContent = item.word;
+                
+                const detailsDiv = document.createElement("div");
+                detailsDiv.className = "wrong-answer-details";
+                detailsDiv.innerHTML = `
+                    정답: <strong>${item.correctAnswer}</strong><br>
+                    선택: <span style="color: #d32f2f;">${item.userAnswer}</span><br>
+                    <small>날짜: ${item.timestamp}</small>
+                `;
+                
+                contentDiv.appendChild(wordDiv);
+                contentDiv.appendChild(detailsDiv);
+                
+                const buttonsDiv = document.createElement("div");
+                buttonsDiv.className = "wrong-answer-buttons";
+                
+                const retryBtn = document.createElement("button");
+                retryBtn.className = "retry-btn";
+                retryBtn.textContent = "다시풀기";
+                retryBtn.onclick = function() {
+                    // 해당 단어로 새로운 퀴즈 생성
+                    quizData = [generateQuizFromWord(item.word, item.correctAnswer)];
+                    renderCards();
+                    // 패널 닫기
+                    wrongAnswersPanel.style.display = "none";
+                };
+                
+                const deleteBtn = document.createElement("button");
+                deleteBtn.className = "delete-wrong-btn";
+                deleteBtn.textContent = "삭제";
+                deleteBtn.onclick = function() {
+                    deleteWrongAnswer(index);
+                };
+                
+                buttonsDiv.appendChild(retryBtn);
+                buttonsDiv.appendChild(deleteBtn);
+                
+                listItem.appendChild(contentDiv);
+                listItem.appendChild(buttonsDiv);
+                wrongAnswersList.appendChild(listItem);
+            });
+        }
+
+        // 특정 오답 삭제 함수
+        function deleteWrongAnswer(index) {
+            let wrongAnswers = JSON.parse(localStorage.getItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY)) || [];
+            wrongAnswers.splice(index, 1);
+            localStorage.setItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY, JSON.stringify(wrongAnswers));
+            renderWrongAnswers();
+        }
+
+        // 모든 오답 삭제 함수
+        function clearAllWrongAnswers() {
+            if (confirm("모든 오답을 삭제하시겠습니까?")) {
+                localStorage.removeItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY);
+                renderWrongAnswers();
+            }
+        }
+
         function createMyQuizDOM(data) {
             const quizContainer = document.createElement('div');
             quizContainer.className = 'my-quiz-container';
@@ -458,6 +713,9 @@
                         optionButton.classList.add('incorrect-answer');
                         feedbackP.textContent = data.feedbackIncorrect;
                         feedbackP.style.color = '#dc3545';
+                        
+                        // 오답인 경우 오답노트에 저장
+                        saveWrongAnswer(data.word, data.answer, choiceText);
                     }
                     
                     optionsContainer.querySelectorAll('.my-option').forEach(btn => {
@@ -485,12 +743,12 @@
 
         // 학습 내용 렌더링 함수
         function renderStudyNotes() {
-            studyNotesList.innerHTML = ""; // 기존 목록 초기화
+            studyNotesList.innerHTML = "";
             const notes = JSON.parse(localStorage.getItem(LOCAL_STORAGE_STUDY_NOTES_KEY)) || [];
             notes.forEach((noteText, index) => {
                 const listItem = document.createElement("li");
                 
-                const textSpan = document.createElement("span"); // 텍스트를 위한 span
+                const textSpan = document.createElement("span");
                 textSpan.textContent = noteText;
                 
                 const deleteBtn = document.createElement("button");
@@ -508,11 +766,16 @@
         // 학습 내용 삭제 함수
         function deleteStudyNote(noteIndex) {
             let notes = JSON.parse(localStorage.getItem(LOCAL_STORAGE_STUDY_NOTES_KEY)) || [];
-            notes.splice(noteIndex, 1); // 해당 인덱스의 노트 삭제
+            notes.splice(noteIndex, 1);
             localStorage.setItem(LOCAL_STORAGE_STUDY_NOTES_KEY, JSON.stringify(notes));
-            renderStudyNotes(); // 목록 다시 렌더링
+            renderStudyNotes();
         }
 
+        // 패널 닫기 함수
+        function closeAllPanels() {
+            studyPanel.style.display = "none";
+            wrongAnswersPanel.style.display = "none";
+        }
 
         // 이벤트 리스너 설정
         document.getElementById("refreshBtn").addEventListener("click", () => {
@@ -546,11 +809,20 @@
         // 학습 내용 패널 토글
         studyNav.addEventListener("click", (e) => {
             e.preventDefault();
-            if (studyPanel.style.display === "block") {
-                studyPanel.style.display = "none";
-            } else {
+            closeAllPanels();
+            if (studyPanel.style.display !== "block") {
                 studyPanel.style.display = "block";
-                renderStudyNotes(); // 패널이 열릴 때마다 노트를 다시 렌더링 (선택적)
+                renderStudyNotes();
+            }
+        });
+
+        // 오답노트 패널 토글
+        wrongAnswersNav.addEventListener("click", (e) => {
+            e.preventDefault();
+            closeAllPanels();
+            if (wrongAnswersPanel.style.display !== "block") {
+                wrongAnswersPanel.style.display = "block";
+                renderWrongAnswers();
             }
         });
 
@@ -566,16 +838,26 @@
             notes.push(noteText);
             localStorage.setItem(LOCAL_STORAGE_STUDY_NOTES_KEY, JSON.stringify(notes));
 
-            studyContent.value = ""; // 입력창 초기화
-            renderStudyNotes(); // 목록 다시 렌더링
-            // alert("학습 내용이 추가되었습니다."); // 사용자 피드백 (선택적)
+            studyContent.value = "";
+            renderStudyNotes();
         });
 
+        // 모든 오답 삭제 버튼 이벤트 리스너
+        clearAllWrongBtn.addEventListener("click", clearAllWrongAnswers);
+
+        // 외부 클릭 시 패널 닫기
+        document.addEventListener("click", (e) => {
+            if (!studyPanel.contains(e.target) && !studyNav.contains(e.target) &&
+                !wrongAnswersPanel.contains(e.target) && !wrongAnswersNav.contains(e.target)) {
+                closeAllPanels();
+            }
+        });
 
         // 초기화
         populateWordPool(200);
         renderCards();
-        renderStudyNotes(); // 페이지 로드 시 저장된 학습 내용 불러오기
+        renderStudyNotes();
+        renderWrongAnswers();
     </script>
 </body>
 </html>
