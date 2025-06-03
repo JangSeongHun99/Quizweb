@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Quizlet</title>
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+ Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+ }
+
+/* 수정된 부분: body 높이와 배경 설정 */
+body {
+  min-height: 100vh; /* height에서 min-height로 변경 */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-attachment: fixed; /* 배경을 뷰포트에 고정 */
+  overflow-x: hidden;
+}
+
+/* 대안 방법: html과 body에 모두 적용 */
+html {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-attachment: fixed;
+  min-height: 100%;
+}
+
+header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 20px 40px;
+background: rgba(255, 255, 255, 0.18);
+backdrop-filter: blur(30px);
+border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+position: sticky;
+top: 0;
+z-index: 1000;
+box-shadow: 
+  0 8px 32px rgba(0, 0, 0, 0.08),
+  0 1px 0px rgba(255, 255, 255, 0.25) inset;
+ }
+.logo {
+font-size: 1.8rem;
+font-weight: 700;
+color: white;
+text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+ }
+.nav-buttons {
+display: flex;
+gap: 15px;
+ }
+.nav-buttons button {
+background: rgba(255, 255, 255, 0.15);
+backdrop-filter: blur(20px);
+border: 1px solid rgba(255, 255, 255, 0.25);
+font-size: 0.95rem;
+color: white;
+cursor: pointer;
+padding: 12px 18px;
+border-radius: 12px;
+transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+box-shadow: 
+  0 4px 16px rgba(0, 0, 0, 0.08),
+  0 1px 0px rgba(255, 255, 255, 0.25) inset;
+font-weight: 500;
+ }
+.nav-buttons button:hover {
+background: rgba(255, 255, 255, 0.25);
+transform: translateY(-2px);
+box-shadow: 
+  0 8px 24px rgba(0, 0, 0, 0.12),
+  0 1px 0px rgba(255, 255, 255, 0.35) inset;
+ }
+.search-bar {
+margin: 0 20px;
+flex-grow: 1;
+max-width: 400px;
+position: relative;
+ }
+.search-bar input {
+width: 100%;
+padding: 14px 22px;
+border-radius: 12px;
+border: 1px solid rgba(255, 255, 255, 0.25);
+outline: none;
+background: rgba(255, 255, 255, 0.15);
+backdrop-filter: blur(20px);
+font-size: 1rem;
+color: white;
+placeholder-color: rgba(255, 255, 255, 0.7);
+box-shadow:
+0 4px 16px rgba(0, 0, 0, 0.08),
+0 1px 0px rgba(255, 255, 255, 0.25) inset;
+transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+ }
+.search-bar input::placeholder {
+color: rgba(255, 255, 255, 0.7);
+}
+.search-bar input:focus {
+background: rgba(255, 255, 255, 0.25);
+border-color: rgba(255, 255, 255, 0.4);
+box-shadow:
+0 8px 24px rgba(0, 0, 0, 0.12),
+0 1px 0px rgba(255, 255, 255, 0.35) inset;
+}
+.search-clear {
+position: absolute;
+right: 15px;
+top: 50%;
+transform: translateY(-50%);
+background: none;
+border: none;
+font-size: 18px;
+cursor: pointer;
+color: rgba(255, 255, 255, 0.7);
+display: none;
+transition: color 0.2s ease;
+}
+.search-clear:hover {
+color: white;
+}
+.card-count {
+font-size: 0.85rem;
+color: rgba(255, 255, 255, 0.8);
+margin-left: 8px;
+font-weight: 500;
+}
+.container {
+display: flex;
+justify-content: center;
+padding: 40px;
+ }
+.panel {
+background: rgba(255, 255, 255, 0.18);
+backdrop-filter: blur(40px);
+border-radius: 24px;
+padding: 50px;
+width: 100%;
+max-width: 900px;
+box-shadow:
+0 20px 60px rgba(0, 0, 0, 0.08),
+0 1px 0px rgba(255, 255, 255, 0.25) inset,
+0 -1px 0px rgba(0, 0, 0, 0.05) inset;
+border: 1px solid rgba(255, 255, 255, 0.25);
+display: none;
+ }
+.panel.active {
+display: block;
+animation: panelFadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+ }
+@keyframes panelFadeIn {
+from {
+opacity: 0;
+transform: translateY(20px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+input, textarea {
+width: 100%;
+padding: 18px 24px;
+margin-bottom: 20px;
+border: 1px solid rgba(255, 255, 255, 0.25);
+border-radius: 16px;
+background: rgba(255, 255, 255, 0.15);
+backdrop-filter: blur(20px);
+outline: none;
+font-size: 1.1rem;
+color: white;
+box-shadow:
+0 4px 16px rgba(0, 0, 0, 0.08),
+0 1px 0px rgba(255, 255, 255, 0.25) inset;
+transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+ }
+input::placeholder, textarea::placeholder {
+color: rgba(255, 255, 255, 0.7);
+}
+input:focus, textarea:focus {
+background: rgba(255, 255, 255, 0.25);
+border-color: rgba(255, 255, 255, 0.4);
+box-shadow:
+0 8px 24px rgba(0, 0, 0, 0.12),
+0 1px 0px rgba(255, 255, 255, 0.35) inset;
+}
+button.add-card {
+padding: 18px;
+width: 100%;
+background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+color: white;
+border: none;
+border-radius: 16px;
+font-size: 1.1rem;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+box-shadow: 
+  0 8px 24px rgba(0, 122, 255, 0.25),
+  0 1px 0px rgba(255, 255, 255, 0.25) inset;
+ }
+button.add-card:hover {
+transform: translateY(-3px);
+box-shadow: 
+  0 16px 40px rgba(0, 122, 255, 0.3),
+  0 1px 0px rgba(255, 255, 255, 0.35) inset;
+}
+button.add-card:disabled {
+background: rgba(255, 255, 255, 0.1);
+cursor: not-allowed;
+transform: none;
+box-shadow: 
+  0 4px 16px rgba(0, 0, 0, 0.08),
+  0 1px 0px rgba(255, 255, 255, 0.15) inset;
+}
+.cards {
+margin-top: 40px;
+display: flex;
+flex-direction: column;
+gap: 24px;
+ }
+.card {
+background: rgba(255, 255, 255, 0.15);
+backdrop-filter: blur(30px);
+border-radius: 20px;
+padding: 28px;
+position: relative;
+transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+animation: fadeIn 0.6s ease;
+border: 1px solid rgba(255, 255, 255, 0.25);
+box-shadow:
+0 8px 32px rgba(0, 0, 0, 0.08),
+0 1px 0px rgba(255, 255, 255, 0.25) inset,
+0 -1px 0px rgba(0, 0, 0, 0.03) inset;
+ }
+.card:hover {
+transform: translateY(-4px);
+box-shadow:
+0 16px 48px rgba(0, 0, 0, 0.12),
+0 1px 0px rgba(255, 255, 255, 0.35) inset,
+0 -1px 0px rgba(0, 0, 0, 0.05) inset;
+background: rgba(255, 255, 255, 0.2);
+}
+.card h3 {
+margin-bottom: 12px;
+font-size: 1.4rem;
+color: white;
+font-weight: 700;
+ }
+.card .meaning {
+color: rgba(255, 255, 255, 0.9);
+margin-bottom: 12px;
+font-size: 1.1rem;
+font-weight: 500;
+}
+.card .example {
+color: rgba(255, 255, 255, 0.8);
+font-style: italic;
+margin-bottom: 12px;
+font-size: 1rem;
+}
+.hint {
+display: none;
+margin-top: 15px;
+color: white;
+background: rgba(255, 255, 255, 0.12);
+backdrop-filter: blur(20px);
+padding: 16px 20px;
+border-radius: 14px;
+border: 1px solid rgba(255, 255, 255, 0.25);
+box-shadow:
+0 4px 16px rgba(0, 0, 0, 0.08),
+0 1px 0px rgba(255, 255, 255, 0.25) inset;
+ }
+.card button {
+margin-top: 15px;
+margin-right: 12px;
+background: rgba(255, 255, 255, 0.15);
+backdrop-filter: blur(20px);
+border: 1px solid rgba(255, 255, 255, 0.25);
+color: white;
+padding: 10px 16px;
+border-radius: 12px;
+cursor: pointer;
+transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+font-weight: 500;
+box-shadow: 
+  0 4px 16px rgba(0, 0, 0, 0.08),
+  0 1px 0px rgba(255, 255, 255, 0.25) inset;
+ }
+.card button:hover {
+background: rgba(255, 255, 255, 0.25);
+transform: translateY(-2px);
+box-shadow: 
+  0 8px 24px rgba(0, 0, 0, 0.12),
+  0 1px 0px rgba(255, 255, 255, 0.35) inset;
+}
+.card button[style*="background: #ff3b30"] {
+background: rgba(255, 59, 48, 0.8) !important;
+backdrop-filter: blur(20px);
+}
+.card button[style*="background: #ff3b30"]:hover {
+background: rgba(255, 59, 48, 0.9) !important;
+}
+.favorite {
+position: absolute;
+top: 20px;
+right: 20px;
+font-size: 22px;
+cursor: pointer;
+color: #FF9500;
+transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+filter: drop-shadow(0 2px 8px rgba(255, 149, 0, 0.25));
+ }
+.favorite:hover {
+transform: scale(1.2);
+color: #FF9F0A;
+}
+.favorite.inactive {
+color: rgba(255, 255, 255, 0.4);
+ }
+.empty-state {
+text-align: center;
+padding: 80px 30px;
+color: rgba(255, 255, 255, 0.8);
+}
+.empty-state h3 {
+font-size: 1.8rem;
+margin-bottom: 20px;
+color: white;
+font-weight: 700;
+}
+.empty-state p {
+font-size: 1.1rem;
+line-height: 1.7;
+}
+.loading-toast {
+position: fixed;
+top: 120px;
+right: -20px;
+background: rgba(255, 255, 255, 0.18);
+backdrop-filter: blur(30px);
+color: white;
+padding: 16px 50px;
+border-radius: 14px;
+font-size: 0.95rem;
+font-weight: 500;
+z-index: 1001;
+transform: translateX(120%) scale(0.8);
+transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+border: 1px solid rgba(255, 255, 255, 0.25);
+box-shadow: 
+  0 12px 32px rgba(0, 0, 0, 0.12),
+  0 1px 0px rgba(255, 255, 255, 0.25) inset;
+}
+.loading-toast.show {
+transform: translateX(0) scale(1);
+}
+.loading-toast.success {
+background: rgba(52, 199, 89, 0.2);
+border-color: rgba(52, 199, 89, 0.35);
+}
+.loading-toast.error {
+background: rgba(255, 59, 48, 0.2);
+border-color: rgba(255, 59, 48, 0.35);
+}
+@keyframes fadeIn {
+ from {
+opacity: 0;
+transform: translateY(20px);
+ }
+ to {
+opacity: 1;
+transform: translateY(0);
+ }
+ }
+.quiz-section {
+position: fixed;
+top: 0;
+left: 0;
+width: 100vw;
+height: 100vh;
+background: rgba(0, 0, 0, 0.5);
+backdrop-filter: blur(20px);
+display: none;
+justify-content: center;
+align-items: center;
+z-index: 2000;
+}
+.quiz-container {
+background: rgba(255, 255, 255, 0.18);
+backdrop-filter: blur(50px);
+border-radius: 28px;
+padding: 60px;
+width: 90%;
+max-width: 800px;
+box-shadow:
+0 30px 80px rgba(0, 0, 0, 0.15),
+0 1px 0px rgba(255, 255, 255, 0.25) inset,
+0 -1px 0px rgba(0, 0, 0, 0.05) inset;
+border: 1px solid rgba(255, 255, 255, 0.25);
+text-align: center;
+position: relative;
+animation: slideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.quiz-close {
+position: absolute;
+top: 25px;
+right: 30px;
+background: rgba(255, 255, 255, 0.12);
+backdrop-filter: blur(20px);
+border: 1px solid rgba(255, 255, 255, 0.25);
+width: 40px;
+height: 40px;
+border-radius: 50%;
+font-size: 20px;
+cursor: pointer;
+color: white;
+transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.quiz-close:hover {
+background: rgba(255, 255, 255, 0.2);
+transform: scale(1.1);
+}
+.quiz-progress {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 50px;
+font-size: 1rem;
+color: rgba(255, 255, 255, 0.8);
+font-weight: 500;
+}
+.quiz-progress-bar {
+flex-grow: 1;
+margin: 0 25px;
+height: 6px;
+background: rgba(255, 255, 255, 0.25);
+border-radius: 3px;
+overflow: hidden;
+backdrop-filter: blur(10px);
+}
+.quiz-progress-fill {
+height: 100%;
+background: linear-gradient(90deg, #007AFF, #5856D6);
+transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+border-radius: 3px;
+}
+.quiz-word {
+font-size: 3.5rem;
+font-weight: 700;
+margin: 40px 0;
+color: white;
+text-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+.quiz-hint,
+.quiz-answer {
+font-size: 1.4rem;
+margin: 25px 0;
+min-height: 70px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.quiz-hint {
+color: white;
+background: rgba(255, 149, 0, 0.18);
+backdrop-filter: blur(20px);
+border-radius: 16px;
+padding: 20px;
+border: 1px solid rgba(255, 149, 0, 0.35);
+box-shadow: 
+  0 8px 24px rgba(255, 149, 0, 0.12),
+  0 1px 0px rgba(255, 255, 255, 0.25) inset;
+}
+.quiz-answer {
+color: white;
+background: rgba(52, 199, 89, 0.18);
+backdrop-filter: blur(20px);
+border-radius: 16px;
+padding: 20px;
+border: 1px solid rgba(52, 199, 89, 0.35);
+font-weight: 600;
+box-shadow: 
+  0 8px 24px rgba(52, 199, 89, 0.12),
+  0 1px 0px rgba(255, 255, 255, 0.25) inset;
+}
+.quiz-buttons {
+display: flex;
+justify-content: center;
+gap: 18px;
+margin-top: 50px;
+flex-wrap: wrap;
+}
+.quiz-buttons button {
+padding: 16px 28px;
+font-size: 1.05rem;
+font-weight: 600;
+border: none;
+border-radius: 16px;
+cursor: pointer;
+transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+min-width: 140px;
+backdrop-filter: blur(20px);
+border: 1px solid rgba(255, 255, 255, 0.25);
+box-shadow: 
+  0 6px 20px rgba(0, 0, 0, 0.08),
+  0 1px 0px rgba(255, 255, 255, 0.25) inset;
+}
+.quiz-buttons .btn-hint {
+background: rgba(255, 149, 0, 0.2);
+color: white;
+border-color: rgba(255, 149, 0, 0.35);
+}
+.quiz-buttons .btn-hint:hover {
+background: rgba(255, 149, 0, 0.3);
+transform: translateY(-3px);
+box-shadow: 
+  0 12px 32px rgba(255, 149, 0, 0.2),
+  0 1px 0px rgba(255, 255, 255, 0.35) inset;
+}
+.quiz-buttons .btn-answer {
+background: rgba(52, 199, 89, 0.2);
+color: white;
+border-color: rgba(52, 199, 89, 0.35);
+}
+.quiz-buttons .btn-answer:hover {
+background: rgba(52, 199, 89, 0.3);
+transform: translateY(-3px);
+box-shadow: 
+  0 12px 32px rgba(52, 199, 89, 0.2),
+  0 1px 0px rgba(255, 255, 255, 0.35) inset;
+}
+.quiz-buttons .btn-next {
+background: rgba(0, 122, 255, 0.2);
+color: white;
+border-color: rgba(0, 122, 255, 0.35);
+}
+.quiz-buttons .btn-next:hover {
+background: rgba(0, 122, 255, 0.3);
+transform: translateY(-3px);
+box-shadow: 
+  0 12px 32px rgba(0, 122, 255, 0.2),
+  0 1px 0px rgba(255, 255, 255, 0.35) inset;
+}
+.quiz-buttons .btn-close {
+background: rgba(255, 59, 48, 0.2);
+color: white;
+border-color: rgba(255, 59, 48, 0.35);
+}
+.quiz-buttons .btn-close:hover {
+background: rgba(255, 59, 48, 0.3);
+transform: translateY(-3px);
+box-shadow: 
+  0 12px 32px rgba(255, 59, 48, 0.2),
+  0 1px 0px rgba(255, 255, 255, 0.35) inset;
+}
+.quiz-options {
+display: flex;
+justify-content: center;
+gap: 15px;
+margin-bottom: 40px;
+flex-wrap: wrap;
+}
+.quiz-options button {
+padding: 12px 20px;
+background: rgba(255, 255, 255, 0.12);
+backdrop-filter: blur(20px);
+border: 1px solid rgba(255, 255, 255, 0.25);
+color: rgba(255, 255, 255, 0.8);
+border-radius: 14px;
+cursor: pointer;
+transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+font-size: 0.95rem;
+font-weight: 500;
+box-shadow: 
+  0 4px 16px rgba(0, 0, 0, 0.08),
+  0 1px 0px rgba(255, 255, 255, 0.15) inset;
+}
+.quiz-options button.active {
+background: rgba(255, 255, 255, 0.2);
+color: white;
+border-color: rgba(255, 255, 255, 0.35);
+box-shadow: 
+  0 8px 24px rgba(0, 0, 0, 0.12),
+  0 1px 0px rgba(255, 255, 255, 0.35) inset;
+}
+.quiz-options button:hover {
+background: rgba(255, 255, 255, 0.18);
+border-color: rgba(255, 255, 255, 0.35);
+color: white;
+transform: translateY(-2px);
+}
+@keyframes slideIn {
+from {
+opacity: 0;
+transform: scale(0.9) translateY(30px);
+}
+to {
+opacity: 1;
+transform: scale(1) translateY(0);
+}
+}
+@media (max-width: 768px) {
+.quiz-container {
+padding: 40px 25px;
+margin: 20px;
+}
+.quiz-word {
+font-size: 2.5rem;
+}
+.quiz-buttons {
+flex-direction: column;
+}
+.quiz-buttons button {
+width: 100%;
+}
+.panel {
+padding: 30px 25px;
+}
+}
+.demo-content {
+    padding: 100px 40px;
+    text-align: center;
+    color: white;
+}
+
+.demo-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(30px);
+    border-radius: 20px;
+    padding: 40px;
+    margin: 20px auto;
+    max-width: 600px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+.demo-card h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.demo-card p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 15px;
+}
+    </style>
+</head>
+<body>
+<header>
+<div class="logo">Quizlet</div>
+<div class="search-bar">
+<input type="text" id="searchInput" placeholder="단어, 뜻, 예문 검색..." oninput="debouncedSearch()" />
+<button class="search-clear" id="searchClear" onclick="clearSearch()">×</button>
+</div>
+<div class="nav-buttons">
+<button onclick="showPanel('main')">메인화면</button>
+<button onclick="showPanel('storage')">카드 저장소 <span class="card-count" id="cardCount"></span></button>
+<button onclick="openQuiz()">문제 풀기</button>
+</div>
+</header>
+
+<div class="loading-toast" id="loadingToast"></div>
+
+<div class="container">
+<div class="panel active" id="main">
+<input type="text" id="word" placeholder="단어 입력" />
+<input type="text" id="meaning" placeholder="뜻 입력" />
+<textarea id="example" placeholder="예문 입력"></textarea>
+<textarea id="hint" placeholder="힌트 입력"></textarea>
+<button class="add-card" onclick="addCard()" id="addButton">카드 추가</button>
+<div class="cards" id="cardContainer"></div>
+</div>
+<div class="panel" id="storage">
+<div class="cards" id="storageCards"></div>
+</div>
+</div>
+
+<div class="quiz-section" id="quizSection">
+<div class="quiz-container">
+<button class="quiz-close" onclick="closeQuiz()">×</button>
+<div class="quiz-progress">
+<span id="quizCurrent">1</span>
+<div class="quiz-progress-bar">
+<div class="quiz-progress-fill" id="quizProgressFill"></div>
+</div>
+<span id="quizTotal">0</span>
+</div>
+<div class="quiz-options">
+<button onclick="setQuizMode('all')" class="active" id="quizModeAll">전체 카드</button>
+<button onclick="setQuizMode('favorites')" id="quizModeFavorites">즐겨찾기만</button>
+<button onclick="setQuizMode('shuffle')" id="quizModeShuffle">랜덤 순서</button>
+</div>
+<div class="quiz-word" id="quizWord">문제를 불러오는 중...</div>
+<div class="quiz-hint" id="quizHint" style="display: none;"></div>
+<div class="quiz-answer" id="quizAnswer" style="display: none;"></div>
+<div class="quiz-buttons">
+<button class="btn-hint" onclick="showQuizHint()">힌트 보기</button>
+<button class="btn-answer" onclick="showQuizAnswer()">답 보기</button>
+<button class="btn-next" onclick="nextQuiz()">다음 문제</button>
+<button class="btn-close" onclick="closeQuiz()">퀴즈 종료</button>
+</div>
+</div>
+</div>
+
+<script>
+const wordInput = document.getElementById('word');
+const meaningInput = document.getElementById('meaning');
+const exampleInput = document.getElementById('example');
+const hintInput = document.getElementById('hint');
+const searchInput = document.getElementById('searchInput');
+const searchClear = document.getElementById('searchClear');
+const cardContainer = document.getElementById('cardContainer');
+const storageCards = document.getElementById('storageCards');
+const quizSection = document.getElementById('quizSection');
+const quizWord = document.getElementById('quizWord');
+const quizHint = document.getElementById('quizHint');
+const quizAnswer = document.getElementById('quizAnswer');
+const loadingToast = document.getElementById('loadingToast');
+const cardCount = document.getElementById('cardCount');
+const addButton = document.getElementById('addButton');
+
+let cards = JSON.parse(localStorage.getItem('cards')) || [];
+let currentQuizIndex = 0;
+let quizCards = [];
+let quizMode = 'all';
+
+// 디바운싱 함수
+function debounce(func, wait) {
+let timeout;
+return function executedFunction(...args) {
+const later = () => {
+clearTimeout(timeout);
+func(...args);
+};
+clearTimeout(timeout);
+timeout = setTimeout(later, wait);
+};
+}
+
+const debouncedSearch = debounce(() => {
+renderCards();
+updateSearchClear();
+}, 300);
+
+function updateSearchClear() {
+if (searchInput.value.trim()) {
+searchClear.style.display = 'block';
+} else {
+searchClear.style.display = 'none';
+}
+}
+
+function clearSearch() {
+searchInput.value = '';
+searchClear.style.display = 'none';
+renderCards();
+}
+
+function showToast(message, type = 'success') {
+loadingToast.textContent = message;
+loadingToast.className = `loading-toast show ${type}`;
+setTimeout(() => {
+loadingToast.classList.remove('show');
+}, 3000);
+}
+
+function updateCardCount() {
+cardCount.textContent = `(${cards.length}개)`;
+}
+
+function validateForm() {
+const isValid = wordInput.value.trim() !== '' && meaningInput.value.trim() !== '';
+addButton.disabled = !isValid;
+return isValid;
+}
+
+// 실시간 폼 검증
+wordInput.addEventListener('input', validateForm);
+meaningInput.addEventListener('input', validateForm);
+
+// Enter 키로 카드 추가
+document.addEventListener('keydown', (e) => {
+if (e.ctrlKey && e.key === 'Enter') {
+addCard();
+}
+});
+
+window.onload = () => {
+renderCards();
+updateCardCount();
+validateForm();
+};
+
+function showPanel(panelId) {
+document.querySelectorAll('.panel').forEach(panel => {
+panel.classList.remove('active');
+});
+document.getElementById(panelId).classList.add('active');
+if (panelId === 'storage') renderStorage();
+}
+
+function addCard() {
+if (!validateForm()) {
+showToast('단어와 뜻을 모두 입력해주세요.', 'error');
+return;
+}
+
+const card = {
+word: wordInput.value.trim(),
+meaning: meaningInput.value.trim(),
+example: exampleInput.value.trim(),
+hint: hintInput.value.trim(),
+favorite: false,
+createdAt: new Date().toISOString()
+};
+
+cards.unshift(card); // 최신 카드를 맨 위로
+localStorage.setItem('cards', JSON.stringify(cards));
+
+showToast('카드가 추가되었습니다!');
+renderCards();
+updateCardCount();
+
+// 폼 초기화
+wordInput.value = '';
+meaningInput.value = '';
+exampleInput.value = '';
+hintInput.value = '';
+validateForm();
+wordInput.focus();
+}
+
+function renderCards() {
+const keyword = searchInput.value.trim().toLowerCase();
+cardContainer.innerHTML = '';
+
+let filteredCards = cards.filter(card => 
+card.word.toLowerCase().includes(keyword) ||
+card.meaning.toLowerCase().includes(keyword) ||
+card.example.toLowerCase().includes(keyword) ||
+card.hint.toLowerCase().includes(keyword)
+);
+
+if (filteredCards.length === 0) {
+if (keyword) {
+cardContainer.innerHTML = `
+<div class="empty-state">
+<h3>검색 결과가 없습니다</h3>
+<p>"${keyword}"와 관련된 카드를 찾을 수 없습니다.<br>다른 키워드로 검색해보세요.</p>
+</div>
+`;
+} else if (cards.length === 0) {
+cardContainer.innerHTML = `
+<div class="empty-state">
+<h3>첫 번째 카드를 추가해보세요!</h3>
+<p>위의 폼을 채우고 "카드 추가" 버튼을 클릭하거나<br><strong>Ctrl + Enter</strong>를 눌러 카드를 만들어보세요.</p>
+</div>
+`;
+}
+return;
+}
+
+filteredCards.forEach((card, index) => {
+const originalIndex = cards.indexOf(card);
+const div = document.createElement('div');
+div.className = 'card';
+div.innerHTML = `
+<div class="favorite ${card.favorite ? '' : 'inactive'}" onclick="toggleFavorite(${originalIndex}, this)" title="즐겨찾기">★</div>
+<h3>${highlightText(card.word, keyword)}</h3>
+<div class="meaning">${highlightText(card.meaning, keyword)}</div>
+${card.example ? `<div class="example">"${highlightText(card.example, keyword)}"</div>` : ''}
+<button onclick="toggleHint(this)">힌트 보기</button>
+<div class="hint">${highlightText(card.hint || '힌트가 없습니다.', keyword)}</div>
+<button onclick="deleteCard(${originalIndex})" style="background: #ff3b30; color: white;">삭제</button>
+`;
+cardContainer.appendChild(div);
+});
+}
+
+function highlightText(text, keyword) {
+if (!keyword || !text) return text;
+const regex = new RegExp(`(${keyword})`, 'gi');
+return text.replace(regex, '<mark style="background: yellow; padding: 2px 4px; border-radius: 3px;">$1</mark>');
+}
+
+function renderStorage() {
+storageCards.innerHTML = '';
+
+if (cards.length === 0) {
+storageCards.innerHTML = `
+<div class="empty-state">
+<h3>저장된 카드가 없습니다</h3>
+<p>메인화면에서 카드를 추가하면<br>여기에서 모든 카드를 확인할 수 있습니다.</p>
+</div>
+`;
+return;
+}
+
+cards.forEach((card, index) => {
+const div = document.createElement('div');
+div.className = 'card';
+div.innerHTML = `
+<div class="favorite ${card.favorite ? '' : 'inactive'}" onclick="toggleFavorite(${index}, this)" title="즐겨찾기">★</div>
+<h3>${card.word}</h3>
+<div class="meaning">${card.meaning}</div>
+${card.example ? `<div class="example">"${card.example}"</div>` : ''}
+${card.hint ? `<p><strong>힌트:</strong> ${card.hint}</p>` : ''}
+<button onclick="deleteCard(${index})" style="background: #ff3b30; color: white;">삭제</button>
+`;
+storageCards.appendChild(div);
+});
+}
+
+function toggleHint(button) {
+const hintDiv = button.nextElementSibling;
+hintDiv.style.display = hintDiv.style.display === 'block' ? 'none' : 'block';
+button.textContent = hintDiv.style.display === 'block' ? '힌트 숨기기' : '힌트 보기';
+}
+
+function deleteCard(index) {
+if (confirm('정말로 이 카드를 삭제하시겠습니까?')) {
+const deletedCard = cards[index];
+cards.splice(index, 1);
+localStorage.setItem('cards', JSON.stringify(cards));
+showToast(`"${deletedCard.word}" 카드가 삭제되었습니다.`);
+renderCards();
+renderStorage();
+updateCardCount();
+}
+}
+
+function toggleFavorite(index, el) {
+cards[index].favorite = !cards[index].favorite;
+el.classList.toggle('inactive');
+localStorage.setItem('cards', JSON.stringify(cards));
+const status = cards[index].favorite ? '추가' : '제거';
+showToast(`즐겨찾기에서 ${status}되었습니다.`);
+}
+
+// 퀴즈 관련 함수들
+function openQuiz() {
+if (cards.length === 0) {
+showToast('퀴즈를 시작하려면 카드를 먼저 추가해주세요.', 'error');
+return;
+}
+quizSection.style.display = 'flex';
+document.body.style.overflow = 'hidden';
+setupQuiz();
+}
+
+function closeQuiz() {
+quizSection.style.display = 'none';
+document.body.style.overflow = 'auto';
+}
+
+function setQuizMode(mode) {
+quizMode = mode;
+document.querySelectorAll('.quiz-options button').forEach(btn => {
+btn.classList.remove('active');
+});
+document.getElementById(`quizMode${mode.charAt(0).toUpperCase() + mode.slice(1)}`).classList.add('active');
+setupQuiz();
+}
+
+function setupQuiz() {
+switch(quizMode) {
+case 'all':
+quizCards = [...cards];
+break;
+case 'favorites':
+quizCards = cards.filter(card => card.favorite);
+if (quizCards.length === 0) {
+showToast('즐겨찾기한 카드가 없습니다.', 'error');
+quizCards = [...cards];
+setQuizMode('all');
+}
+break;
+case 'shuffle':
+quizCards = [...cards].sort(() => Math.random() - 0.5);
+break;
+}
+currentQuizIndex = 0;
+updateQuizProgress();
+displayQuiz();
+}
+
+function updateQuizProgress() {
+document.getElementById('quizCurrent').textContent = currentQuizIndex + 1;
+document.getElementById('quizTotal').textContent = quizCards.length;
+const progress = ((currentQuizIndex + 1) / quizCards.length) * 100;
+document.getElementById('quizProgressFill').style.width = `${progress}%`;
+}
+
+function displayQuiz() {
+if (quizCards.length === 0) {
+quizWord.textContent = '카드가 없습니다.';
+quizHint.style.display = 'none';
+quizAnswer.style.display = 'none';
+return;
+}
+
+const card = quizCards[currentQuizIndex];
+quizWord.textContent = card.word;
+quizHint.style.display = 'none';
+quizAnswer.style.display = 'none';
+updateQuizProgress();
+}
+
+function showQuizHint() {
+if (quizCards.length === 0) return;
+const card = quizCards[currentQuizIndex];
+quizHint.textContent = card.hint || '힌트가 없습니다.';
+quizHint.style.display = 'flex';
+}
+
+function showQuizAnswer() {
+if (quizCards.length === 0) return;
+const card = quizCards[currentQuizIndex];
+let answerText = card.meaning;
+if (card.example) {
+answerText += `\n예문: "${card.example}"`;
+}
+quizAnswer.innerHTML = answerText.replace(/\n/g, '<br>');
+quizAnswer.style.display = 'flex';
+}
+
+function nextQuiz() {
+if (quizCards.length === 0) return;
+currentQuizIndex = (currentQuizIndex + 1) % quizCards.length;
+displayQuiz();
+}
+
+// 키보드 단축키
+document.addEventListener('keydown', (e) => {
+if (quizSection.style.display === 'flex') {
+switch(e.key) {
+case 'h':
+case 'H':
+showQuizHint();
+break;
+case 'a':
+case 'A':
+showQuizAnswer();
+break;
+case 'n':
+case 'N':
+case ' ':
+case 'ArrowRight':
+nextQuiz();
+break;
+case 'Escape':
+closeQuiz();
+break;
+}
+}
+});
+</script>
+</body>
+</html>
