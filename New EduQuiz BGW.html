@@ -6,10 +6,10 @@
     <title>영어 단어 퀴즈</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #d6e0f5, #f5f9ff);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -18,11 +18,11 @@
 
         header {
             width: 100%;
-            background: rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.15);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.3);
-            padding: 10px 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -42,135 +42,126 @@
         .header-left {
             display: flex;
             align-items: center;
+            gap: 20px;
         }
 
         .logo {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: #7b68ee;
+            font-size: 2em;
+            font-weight: 700;
+            color: #fff;
             text-decoration: none;
-            margin-right: 30px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         #searchInput {
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 25px;
             font-size: 0.9em;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        #searchInput:focus {
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
         }
 
         .header-right {
             display: flex;
             align-items: center;
+            gap: 20px;
         }
 
         .header-right a {
             text-decoration: none;
-            margin-left: 15px;
-            font-size: 0.95em;
-            font-weight: 500;
-            color: #555;
-            transition: color 0.3s;
+            font-size: 1em;
+            font-weight: 600;
+            color: rgba(255,255,255,0.9);
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
         }
 
         .header-right a:hover {
-            color: #0076ff;
+            color: #fff;
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
         }
 
-        #studyPanel {
+        .panel {
             display: none;
             position: absolute;
-            top: calc(100% + 5px);
+            top: calc(100% + 10px); /* Adjusted to be below the header */
             right: 20px;
             width: 450px;
-            background: #fff;
-            border: 1px solid #e1e1e1;
-            border-radius: 8px;
-            padding: 20px;
-            z-index: 100;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 16px;
+            padding: 25px;
+            z-index: 1001; /* Ensure panel is above other header content but below modals if any */
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+        
+        /* Specific panel positioning for search results to align with search bar if needed */
+        #searchResults.panel {
+             left: 20px; /* Or align as needed, this is a generic positioning */
+             right: auto; /* Override general right:20px if it's meant to be under search input */
         }
 
-        #wrongAnswersPanel {
-            display: none;
-            position: absolute;
-            top: calc(100% + 5px);
-            right: 20px;
-            width: 500px;
-            background: #fff;
-            border: 1px solid #e1e1e1;
-            border-radius: 8px;
-            padding: 20px;
-            z-index: 100;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-        }
 
         .panel h2 { 
-            margin-bottom: 15px; 
-            font-size: 1.2rem; 
+            margin-top:0;
+            margin-bottom: 20px; 
+            font-size: 1.3rem; 
             color: #333;
+            font-weight: 700;
         }
 
         #studyContent {
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            width: calc(100% - 12px);
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            width: calc(100% - 24px);
             font-size: 1rem;
             resize: vertical;
             height: 120px;
             box-sizing: border-box;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        #studyContent:focus {
+            border-color: #667eea;
+            outline: none;
         }
 
         #addStudyContentBtn {
-            margin-top: 10px;
-            padding: 8px 12px;
-            background: #0076ff;
+            margin-top: 15px;
+            padding: 12px 20px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
             color: #fff;
             border: none;
-            border-radius: 4px;
+            border-radius: 25px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
             font-size: 1rem;
+            font-weight: 600;
         }
 
-        #addStudyContentBtn:hover { background: #005bb5; }
+        #addStudyContentBtn:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
 
         #studyNotesList {
             margin-top: 20px;
-            text-align: left;
-            list-style: decimal inside;
-            padding-left: 0;
-        }
-
-        #studyNotesList li {
-            background-color: #f9f9f9;
-            border: 1px solid #eee;
-            padding: 8px 12px;
-            margin-bottom: 8px;
-            border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        #studyNotesList li button {
-            background-color: #ff4d4f;
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 0.85em;
-        }
-
-        #studyNotesList li button:hover {
-            background-color: #d9363e;
-        }
-
-        /* 오답노트 스타일 */
-        #wrongAnswersList {
-            margin-top: 15px;
             text-align: left;
             list-style: none;
             padding-left: 0;
@@ -178,86 +169,148 @@
             overflow-y: auto;
         }
 
-        #wrongAnswersList li {
-            background-color: #fff5f5;
-            border: 1px solid #ffcdd2;
-            padding: 12px;
+        #studyNotesList li {
+            background: linear-gradient(135deg, #f8f9ff, #e8f0ff);
+            border: 1px solid #e0e8ff;
+            padding: 12px 16px;
             margin-bottom: 10px;
-            border-radius: 6px;
+            border-radius: 8px;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
+            transition: transform 0.2s ease;
+            color: #333;
+        }
+
+        #studyNotesList li:hover {
+            transform: translateX(5px);
+        }
+
+        #studyNotesList li button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        #studyNotesList li button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+        }
+
+        #wrongAnswersList {
+            margin-top: 15px;
+            text-align: left;
+            list-style: none;
+            padding-left: 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        #wrongAnswersList li {
+            background: linear-gradient(135deg, #fff5f5, #ffe8e8);
+            border: 1px solid #ffcdd2;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* Align items to the top for better layout with multi-line text */
+            transition: all 0.3s ease;
+        }
+
+        #wrongAnswersList li:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 16px rgba(211, 47, 47, 0.2);
         }
 
         .wrong-answer-content {
             flex: 1;
+            margin-right: 10px; /* Add some space between content and buttons */
         }
 
         .wrong-answer-word {
-            font-weight: bold;
-            font-size: 1.1em;
+            font-weight: 700;
+            font-size: 1.2em;
             color: #d32f2f;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
         .wrong-answer-details {
             font-size: 0.9em;
             color: #666;
+            line-height: 1.4;
         }
 
         .wrong-answer-buttons {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 8px;
+            align-items: flex-end; /* Align buttons to the right */
+        }
+
+        .retry-btn, .delete-wrong-btn {
+            border: none;
+            padding: 8px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 80px; /* Ensure buttons have a decent width */
+            text-align: center;
         }
 
         .retry-btn {
-            background-color: #4caf50;
+            background: linear-gradient(45deg, #4caf50, #45a049);
             color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 0.8em;
         }
 
         .retry-btn:hover {
-            background-color: #45a049;
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
         }
 
         .delete-wrong-btn {
-            background-color: #ff4d4f;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
             color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 0.8em;
         }
 
         .delete-wrong-btn:hover {
-            background-color: #d9363e;
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
         }
 
         .clear-all-wrong-btn {
-            background-color: #ff9800;
+            background: linear-gradient(45deg, #ff9800, #f57c00);
             color: white;
             border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
+            padding: 12px 20px;
+            border-radius: 25px;
             cursor: pointer;
             font-size: 0.9em;
-            margin-top: 10px;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            display: block; /* Make it a block to center or control width better if needed */
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .clear-all-wrong-btn:hover {
-            background-color: #f57c00;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
         }
 
         .container {
             width: 100%;
             max-width: 1200px;
-            padding: 20px;
+            padding: 30px 20px;
             box-sizing: border-box;
             text-align: center;
             flex: 1;
@@ -266,8 +319,56 @@
         }
 
         .container h1 {
-            margin-bottom: 20px;
-            color: #0076ff;
+            margin-bottom: 30px;
+            color: #fff;
+            font-size: 2.5em;
+            font-weight: 700;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .difficulty-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-label {
+            font-weight: 700;
+            color: #fff;
+            margin-right: 15px;
+            font-size: 1.1em;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .difficulty-btn {
+            padding: 12px 24px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.9);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        .difficulty-btn:hover {
+            border-color: rgba(255,255,255,0.6);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,255,255,0.2);
+        }
+
+        .difficulty-btn.active {
+            background: rgba(255,255,255,0.9);
+            border-color: rgba(255,255,255,0.9);
+            color: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,255,255,0.3);
         }
 
         .quiz-grid {
@@ -282,34 +383,41 @@
 
         .refresh-btn {
             margin-bottom: 20px;
-            padding: 10px 15px;
-            background: #28a745;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #28a745, #20c997);
             color: #fff;
             border: none;
-            border-radius: 4px;
+            border-radius: 25px;
             cursor: pointer;
-            transition: background 0.3s;
-            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 16px rgba(40, 167, 69, 0.3);
         }
 
-        .refresh-btn:hover { background: #218838; }
+        .refresh-btn:hover { 
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(40, 167, 69, 0.4);
+        }
 
         .my-quiz-container {
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
             width: 100%;
-            max-width: 450px;
-            padding: 20px;
+            max-width: 500px;
+            padding: 30px;
             box-sizing: border-box;
             margin: 0 auto;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .my-question-section {
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             width: 100%;
         }
 
@@ -319,71 +427,257 @@
         }
 
         .my-word-to-learn h2 {
-            font-size: 2.2em;
+            font-size: 2.5em;
             color: #333;
             margin-top: 0;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
             text-transform: capitalize;
+            font-weight: 700;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .my-word-to-learn .my-feedback {
-            font-size: 1.1em;
-            font-weight: bold;
+            font-size: 1.2em;
+            font-weight: 600;
             margin: 0;
-            min-height: 1.2em;
+            min-height: 1.5em; /* Ensure space for feedback text */
+            transition: all 0.3s ease;
         }
 
         .my-options-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 15px;
         }
 
         .my-option {
-            background-color: #ffffff;
-            border: 1px solid #d0d0d0;
-            border-radius: 8px;
-            padding: 15px;
+            background: linear-gradient(135deg, #f8f9ff, #ffffff);
+            border: 2px solid #e0e8ff;
+            border-radius: 12px;
+            padding: 18px;
             font-size: 1em;
-            text-align: left;
+            text-align: center;
             cursor: pointer;
-            transition: background-color 0.2s, border-color 0.2s;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+            color: #333;
         }
 
-        .my-option:hover { background-color: #f8f9fa; }
-        .my-option.selected { font-weight: bold; }
+        .my-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .my-option:hover::before {
+            left: 100%;
+        }
+
+        .my-option:hover { 
+            background: linear-gradient(135deg, #e8f0ff, #f0f8ff);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .my-option.selected { 
+            font-weight: 600;
+            transform: scale(1.02);
+        }
         
         .my-option.correct-answer {
             border-color: #28a745;
-            background-color: #e6ffed;
+            background: linear-gradient(135deg, #e6ffed, #f0fff4);
             color: #28a745;
+            animation: correctPulse 0.6s ease;
         }
 
         .my-option.incorrect-answer {
             border-color: #dc3545;
-            background-color: #ffebee;
+            background: linear-gradient(135deg, #ffebee, #fff5f5);
             color: #dc3545;
+            animation: incorrectShake 0.6s ease;
         }
 
-        .my-option.correct-answer::before { content: '✓ '; font-weight: bold; }
-        .my-option.incorrect-answer::before { content: '✗ '; font-weight: bold; }
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes incorrectShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .my-option.correct-answer::after { 
+            content: ' ✓'; /* Added space */
+            font-weight: bold; 
+        }
+
+        .my-option.incorrect-answer::after { 
+            content: ' ✗'; /* Added space */
+            font-weight: bold; 
+        }
+
+        .my-option:disabled { /* Not directly used, but good practice for visual cue if needed */
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .next-quiz-info {
+            margin-top: 20px;
+            font-size: 1em;
+            color: #666;
+            font-style: italic;
+            padding: 12px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .search-results { /* Style for the search results container (panel itself) */
+            margin-top: 15px; /* This might be overridden by panel style */
+        }
+
+        #searchResultsContent { /* Style for content within search panel */
+             max-height: 300px; /* Example max height */
+             overflow-y: auto;
+        }
+
+        .search-result-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            color: #333;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-word {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .search-meaning {
+            color: #555; /* Darker than #666 for better contrast */
+            margin-left: 10px;
+        }
 
         @media (max-width: 768px) {
-            #searchInput { width: 150px; }
-            .my-quiz-container { width: 90%; padding: 15px; }
-            .my-word-to-learn h2 { font-size: 1.8em; }
-            .my-option { padding: 12px; font-size: 0.9em; }
-            #studyPanel, #wrongAnswersPanel { width: 90%; max-width: 400px; right: 5%; }
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px; /* Adjusted padding for header container */
+            }
+
+            .header-left {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .header-right {
+                width: 100%;
+                justify-content: center;
+                gap: 10px; /* Reduced gap for smaller screens */
+            }
+             .header-right a {
+                padding: 8px 12px; /* Slightly smaller padding for buttons */
+            }
+
+            #searchInput { 
+                width: auto; /* Allow search input to take available space or set specific */
+                flex-grow: 1; /* Example: allow it to grow if logo is small */
+                max-width: 250px; /* Max width on mobile */
+            }
+
+            .my-quiz-container { 
+                width: 90%; 
+                padding: 20px; 
+            }
+
+            .my-word-to-learn h2 { 
+                font-size: 2em; 
+            }
+
+            .my-option { 
+                padding: 15px; 
+                font-size: 0.9em; 
+            }
+
+            .panel { 
+                width: calc(100% - 30px); 
+                left: 15px; /* Center panel on smaller screens */
+                right: 15px; 
+                top: calc(100% + 5px); /* Slightly closer to header */
+            }
+             /* Ensure search results panel also follows this rule */
+            #searchResults.panel {
+                 left: 15px;
+                 right: 15px;
+            }
+
+
+            .difficulty-container { 
+                flex-direction: column;
+                align-items: stretch; /* Make buttons full width in column */
+                gap: 10px;
+            }
+            .difficulty-label {
+                margin-right: 0; /* Remove right margin when in column */
+                margin-bottom: 5px; /* Add bottom margin */
+                text-align: center;
+            }
+
+            .difficulty-btn { 
+                padding: 10px 20px; 
+                font-size: 0.9em; 
+                width: 100%; /* Make buttons take full width available */
+                box-sizing: border-box; /* Include padding and border in element's total width */
+            }
+
+            .container h1 {
+                font-size: 2em;
+            }
         }
 
         @media (max-width: 480px) {
-            .header-container { flex-direction: column; align-items: flex-start; gap: 10px;}
-            .header-right { width: 100%; justify-content: space-around; margin-top: 5px;}
-            .header-right a { margin-left: 0;}
-            .my-question-section { flex-direction: column; align-items: center; }
-            .my-word-to-learn { text-align: center; }
-            .my-word-to-learn h2 { font-size: 1.6em; }
-            #studyPanel, #wrongAnswersPanel { width: calc(100% - 40px) ; right: 20px; }
+            .my-options-container {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .my-word-to-learn h2 { 
+                font-size: 1.8em; 
+            }
+            
+            .header-left {
+                flex-direction: column; /* Stack logo and search on very small screens */
+                align-items: center;
+                gap: 10px;
+            }
+            .logo { font-size: 1.8em; }
+            #searchInput { max-width: 100%; width: 100%; }
+
+
+            .container {
+                padding: 20px 15px;
+            }
+             .header-right a {
+                font-size: 0.9em;
+                padding: 6px 10px;
+            }
         }
     </style>
 </head>
@@ -391,86 +685,103 @@
     <header>
         <div class="header-container">
             <div class="header-left">
-                <a href="#" class="logo">EduQuiz</a>
-                <input type="text" id="searchInput" placeholder="검색 (영어 단어)">
+                <a href="#" class="logo">🎓 EduQuiz</a>
+                <input type="text" id="searchInput" placeholder="영어 단어 검색...">
             </div>
             <div class="header-right">
-                <a href="#" id="homeLink">홈</a>
-                <a href="#" id="studyNav">학습내용</a>
-                <a href="#" id="wrongAnswersNav">오답노트</a>
+                <a href="#" id="homeLink">🏠 홈</a>
+                <a href="#" id="studyNav">📚 학습내용</a>
+                <a href="#" id="wrongAnswersNav">❌ 오답노트</a>
             </div>
         </div>
         
-        <!-- 학습내용 패널 -->
         <div id="studyPanel" class="panel">
-            <h2>학습 내용 저장 및 추가</h2>
-            <textarea id="studyContent" placeholder="학습한 내용을 입력하세요"></textarea><br>
-            <button id="addStudyContentBtn">학습 내용 추가</button>
+            <h2>📚 학습 내용 관리</h2>
+            <textarea id="studyContent" placeholder="학습한 내용이나 메모를 입력하세요..."></textarea>
+            <button id="addStudyContentBtn">✅ 학습 내용 추가</button>
             <ul id="studyNotesList"></ul>
         </div>
 
-        <!-- 오답노트 패널 -->
         <div id="wrongAnswersPanel" class="panel">
-            <h2>오답노트 📝</h2>
-            <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">틀린 문제들이 자동으로 저장됩니다.</p>
+            <h2>❌ 오답노트</h2>
+            <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">틀린 문제들이 자동으로 저장되어 복습할 수 있습니다.</p>
             <ul id="wrongAnswersList"></ul>
-            <button id="clearAllWrongBtn" class="clear-all-wrong-btn">모든 오답 삭제</button>
+            <button id="clearAllWrongBtn" class="clear-all-wrong-btn" style="display:none;">🗑️ 모든 오답 삭제</button>
+        </div>
+
+        <div id="searchResults" class="panel">
+            <h2>🔍 검색 결과</h2>
+            <div id="searchResultsContent"></div>
         </div>
     </header>
 
     <div class="container">
-        <h1>영어 단어 퀴즈</h1>
-        <button class="refresh-btn" id="refreshBtn">새로운 문제</button>
+        <h1>🌟 영어 단어 퀴즈</h1>
+        
+        <div class="difficulty-container">
+            <span class="difficulty-label">🎯 난이도 선택:</span>
+            <button class="difficulty-btn easy active" data-difficulty="easy">🟢 쉬움 (기초)</button>
+            <button class="difficulty-btn medium" data-difficulty="medium">🟡 보통 (중급)</button>
+            <button class="difficulty-btn hard" data-difficulty="hard">🔴 어려움 (고급)</button>
+        </div>
+        
+        <button class="refresh-btn" id="refreshBtn">🔄 새로운 문제</button>
         <div class="quiz-grid" id="quizGrid"></div>
     </div>
 
     <script>
-        const baseWords = [
-            { en: "apple", ko: "사과" }, { en: "book", ko: "책" }, { en: "car", ko: "자동차" },
-            { en: "dog", ko: "개" }, { en: "house", ko: "집" }, { en: "tree", ko: "나무" },
-            { en: "computer", ko: "컴퓨터" }, { en: "phone", ko: "전화기" }, { en: "river", ko: "강" },
-            { en: "city", ko: "도시" }, { en: "happy", ko: "행복한" }, { en: "blue", ko: "파란" },
-            { en: "bright", ko: "밝은" }, { en: "tall", ko: "키 큰" }, { en: "old", ko: "늙은/오래된" },
-            { en: "young", ko: "젊은" }, { en: "smart", ko: "똑똑한" }, { en: "quiet", ko: "조용한" },
-            { en: "loud", ko: "시끄러운" }, { en: "gentle", ko: "부드러운" }, { en: "water", ko: "물" },
-            { en: "fire", ko: "불" }, { en: "earth", ko: "흙/지구" }, { en: "wind", ko: "바람" },
-            { en: "sun", ko: "태양" }, { en: "moon", ko: "달" }, { en: "star", ko: "별" },
-            { en: "sky", ko: "하늘" }, { en: "friend", ko: "친구" }, { en: "love", ko: "사랑" },
-            { en: "time", ko: "시간" }, { en: "world", ko: "세계" }, { en: "school", ko: "학교" },
-            { en: "student", ko: "학생" }, { en: "teacher", ko: "선생님" }, { en: "big", ko: "큰" },
-            { en: "small", ko: "작은" }, { en: "fast", ko: "빠른" }, { en: "slow", ko: "느린" },
-            { en: "beautiful", ko: "아름다운" }, { en: "strong", ko: "강한" }, { en: "weak", ko: "약한" },
-            { en: "good", ko: "좋은" }, { en: "bad", ko: "나쁜" }, { en: "new", ko: "새로운" },
-            { en: "red", ko: "빨간색" }, { en: "green", ko: "초록색" }, { en: "yellow", ko: "노란색" },
-            { en: "white", ko: "흰색" }, { en: "black", ko: "검은색" }, { en: "day", ko: "낮/날" },
-            { en: "night", ko: "밤" }, { en: "music", ko: "음악" }, { en: "food", ko: "음식" },
-            { en: "game", ko: "게임" }, { en: "art", ko: "예술" }, { en: "flower", ko: "꽃" },
-            { en: "mountain", ko: "산" }, { en: "ocean", ko: "바다" }, { en: "light", ko: "빛" },
-            { en: "dark", ko: "어두운" }, { en: "hot", ko: "더운" }, { en: "cold", ko: "추운" },
-            { en: "road", ko: "길" }, { en: "door", ko: "문" }, { en: "window", ko: "창문" },
-            { en: "chair", ko: "의자" }, { en: "table", ko: "탁자" }, { en: "pen", ko: "펜" },
-            { en: "pencil", ko: "연필" }, { en: "paper", ko: "종이" }, { en: "money", ko: "돈" },
-            { en: "dream", ko: "꿈" }, { en: "work", ko: "일/작업" }, { en: "play", ko: "놀이/놀다" },
-            { en: "walk", ko: "걷다" }, { en: "run", ko: "달리다" }, { en: "eat", ko: "먹다" },
-            { en: "drink", ko: "마시다" }, { en: "sleep", ko: "자다" }, { en: "read", ko: "읽다" },
-            { en: "write", ko: "쓰다" }, { en: "speak", ko: "말하다" }, { en: "listen", ko: "듣다" },
-            { en: "think", ko: "생각하다" }, { en: "learn", ko: "배우다" }, { en: "teach", ko: "가르치다" },
-            { en: "help", ko: "돕다" }, { en: "use", ko: "사용하다" }, { en: "make", ko: "만들다" },
-            { en: "give", ko: "주다" }, { en: "take", ko: "가져가다" }, { en: "see", ko: "보다" },
-            { en: "look", ko: "바라보다" }, { en: "find", ko: "찾다" }, { en: "know", ko: "알다" },
-            { en: "feel", ko: "느끼다" }, { en: "come", ko: "오다" }, { en: "go", ko: "가다" },
-            { en: "easy", ko: "쉬운" }, { en: "hard", ko: "어려운/단단한" }, { en: "kind", ko: "친절한" },
-            { en: "rich", ko: "부유한" }, { en: "poor", ko: "가난한" }, { en: "always", ko: "항상" },
-            { en: "never", ko: "결코 ~않다" }, { en: "often", ko: "자주" }, { en: "sometimes", ko: "때때로" }
-        ];
+        // 난이도별 단어 데이터
+        const wordsByDifficulty = {
+            easy: [
+                { en: "apple", ko: "사과" }, { en: "book", ko: "책" }, { en: "car", ko: "자동차" },
+                { en: "dog", ko: "개" }, { en: "house", ko: "집" }, { en: "tree", ko: "나무" },
+                { en: "water", ko: "물" }, { en: "fire", ko: "불" }, { en: "sun", ko: "태양" },
+                { en: "moon", ko: "달" }, { en: "star", ko: "별" }, { en: "sky", ko: "하늘" },
+                { en: "big", ko: "큰" }, { en: "small", ko: "작은" }, { en: "good", ko: "좋은" },
+                { en: "bad", ko: "나쁜" }, { en: "red", ko: "빨간색" }, { en: "blue", ko: "파란색" },
+                { en: "green", ko: "초록색" }, { en: "yellow", ko: "노란색" }, { en: "white", ko: "흰색" },
+                { en: "black", ko: "검은색" }, { en: "day", ko: "낮/날" }, { en: "night", ko: "밤" },
+                { en: "hot", ko: "더운" }, { en: "cold", ko: "추운" }, { en: "yes", ko: "네" },
+                { en: "no", ko: "아니오" }, { en: "eat", ko: "먹다" }, { en: "drink", ko: "마시다" },
+                { en: "walk", ko: "걷다" }, { en: "run", ko: "달리다" }, { en: "sleep", ko: "자다" },
+                { en: "work", ko: "일하다" }, { en: "play", ko: "놀다" }, { en: "study", ko: "공부하다" }
+            ],
+            medium: [
+                { en: "computer", ko: "컴퓨터" }, { en: "phone", ko: "전화기" }, { en: "river", ko: "강" },
+                { en: "city", ko: "도시" }, { en: "happy", ko: "행복한" }, { en: "bright", ko: "밝은" },
+                { en: "tall", ko: "키 큰" }, { en: "young", ko: "젊은" }, { en: "smart", ko: "똑똑한" },
+                { en: "quiet", ko: "조용한" }, { en: "loud", ko: "시끄러운" }, { en: "gentle", ko: "부드러운" },
+                { en: "friend", ko: "친구" }, { en: "love", ko: "사랑" }, { en: "time", ko: "시간" },
+                { en: "world", ko: "세계" }, { en: "school", ko: "학교" }, { en: "student", ko: "학생" },
+                { en: "teacher", ko: "선생님" }, { en: "beautiful", ko: "아름다운" }, { en: "strong", ko: "강한" },
+                { en: "music", ko: "음악" }, { en: "food", ko: "음식" }, { en: "game", ko: "게임" },
+                { en: "mountain", ko: "산" }, { en: "ocean", ko: "바다" }, { en: "light", ko: "빛" },
+                { en: "dark", ko: "어두운" }, { en: "dream", ko: "꿈" }, { en: "language", ko: "언어" },
+                { en: "culture", ko: "문화" }, { en: "history", ko: "역사" }, { en: "future", ko: "미래" }
+            ],
+            hard: [
+                { en: "extraordinary", ko: "놀라운" }, { en: "magnificent", ko: "장엄한" }, { en: "inevitable", ko: "피할 수 없는" },
+                { en: "sophisticated", ko: "정교한" }, { en: "tremendous", ko: "엄청난" }, { en: "fascinating", ko: "매혹적인" },
+                { en: "overwhelm", ko: "압도하다" }, { en: "perseverance", ko: "인내" }, { en: "contemplation", ko: "숙고" },
+                { en: "resilience", ko: "회복력" }, { en: "demonstrate", ko: "증명하다" }, { en: "consequence", ko: "결과" },
+                { en: "significance", ko: "중요성" }, { en: "philosophy", ko: "철학" }, { en: "psychology", ko: "심리학" },
+                { en: "approximately", ko: "대략" }, { en: "particularly", ko: "특히" }, { en: "essentially", ko: "본질적으로" },
+                { en: "fundamental", ko: "기본적인" }, { en: "exceptional", ko: "예외적인" }, { en: "comprehensive", ko: "포괄적인" },
+                { en: "controversial", ko: "논란이 되는" }, { en: "circumstances", ko: "상황" }, { en: "characteristic", ko: "특징" },
+                { en: "architecture", ko: "건축학" }, { en: "representative", ko: "대표적인" }, { en: "establishment", ko: "설립" },
+                { en: "independence", ko: "독립" }, { en: "responsibility", ko: "책임" }, { en: "communication", ko: "의사소통" },
+                { en: "environmental", ko: "환경의" }, { en: "technological", ko: "기술의" }, { en: "international", ko: "국제적인" }
+            ]
+        };
 
-        const wordPool = [];
+        let currentDifficulty = 'easy';
+        let currentWordPool = [];
+        let currentQuiz = null;
+        let autoNextTimer = null;
         
-        // 로컬 스토리지 키 상수
         const LOCAL_STORAGE_STUDY_NOTES_KEY = 'engVocabStudyNotes';
         const LOCAL_STORAGE_WRONG_ANSWERS_KEY = 'engVocabWrongAnswers';
         
-        // DOM 요소 참조
         const studyNav = document.getElementById("studyNav");
         const studyPanel = document.getElementById("studyPanel");
         const studyContent = document.getElementById("studyContent");
@@ -482,382 +793,372 @@
         const wrongAnswersList = document.getElementById("wrongAnswersList");
         const clearAllWrongBtn = document.getElementById("clearAllWrongBtn");
 
-        function populateWordPool(count = 200) {
-            wordPool.length = 0;
-            if (baseWords.length === 0) {
-                console.error("기본 단어 목록이 비어있습니다!");
-                return;
-            }
-            for (let i = 0; i < count; i++) {
-                const randomIndex = Math.floor(Math.random() * baseWords.length);
-                wordPool.push(baseWords[randomIndex]);
-            }
+        const searchInput = document.getElementById("searchInput");
+        const searchResults = document.getElementById("searchResults");
+        const searchResultsContent = document.getElementById("searchResultsContent");
+
+        const homeLink = document.getElementById("homeLink");
+        const refreshBtn = document.getElementById("refreshBtn");
+        const quizGrid = document.getElementById("quizGrid");
+
+        const allPanels = [studyPanel, wrongAnswersPanel, searchResults];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            populateCurrentWordPool();
+            generateQuiz();
+            loadStudyNotes();
+            loadWrongAnswers();
+            
+            const initialWrongAnswers = JSON.parse(localStorage.getItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY) || '[]');
+            clearAllWrongBtn.style.display = initialWrongAnswers.length > 0 ? 'block' : 'none';
+        });
+
+        function populateCurrentWordPool() {
+            currentWordPool = [...wordsByDifficulty[currentDifficulty]];
         }
 
-        function generateRandomEnglishQuizData() {
-            if (wordPool.length === 0) {
-                populateWordPool();
-                if (wordPool.length === 0) {
-                    return {
-                        id: "error_quiz",
-                        word: "Error",
-                        choices: ["-", "-", "-", "-"],
-                        answer: "-",
-                        feedbackCorrect: "",
-                        feedbackIncorrect: "단어 풀 로딩 실패"
-                    };
-                }
-            }
-
-            const chosenWordPair = wordPool[Math.floor(Math.random() * wordPool.length)];
-            const englishWord = chosenWordPair.en;
-            const correctKoreanMeaning = chosenWordPair.ko;
-
-            let otherKoreanMeanings = baseWords
-                .filter(pair => pair.ko !== correctKoreanMeaning)
-                .map(pair => pair.ko);
-            
-            otherKoreanMeanings = [...new Set(otherKoreanMeanings)];
-            otherKoreanMeanings.sort(() => Math.random() - 0.5);
-
-            const choices = otherKoreanMeanings.slice(0, 3);
-            choices.push(correctKoreanMeaning);
-            choices.sort(() => Math.random() - 0.5);
-
-            const finalUniqueChoices = [...new Set(choices)].slice(0, 4);
-            while (finalUniqueChoices.length < 4 && baseWords.length >= 4) {
-                const randomFallback = baseWords[Math.floor(Math.random() * baseWords.length)].ko;
-                if (!finalUniqueChoices.includes(randomFallback)) {
-                    finalUniqueChoices.push(randomFallback);
-                }
-            }
-
-            return {
-                id: `en_quiz_${Date.now()}_${Math.random().toString(16).slice(2)}`,
-                word: englishWord,
-                choices: finalUniqueChoices,
-                answer: correctKoreanMeaning,
-                feedbackCorrect: "정답입니다!",
-                feedbackIncorrect: "오답입니다."
-            };
-        }
-
-        // 특정 단어로 퀴즈 생성 (오답노트에서 재시도할 때 사용)
-        function generateQuizFromWord(word, correctAnswer) {
-            let otherKoreanMeanings = baseWords
-                .filter(pair => pair.ko !== correctAnswer)
-                .map(pair => pair.ko);
-            
-            otherKoreanMeanings = [...new Set(otherKoreanMeanings)];
-            otherKoreanMeanings.sort(() => Math.random() - 0.5);
-
-            const choices = otherKoreanMeanings.slice(0, 3);
-            choices.push(correctAnswer);
-            choices.sort(() => Math.random() - 0.5);
-
-            return {
-                id: `retry_quiz_${Date.now()}_${Math.random().toString(16).slice(2)}`,
-                word: word,
-                choices: choices,
-                answer: correctAnswer,
-                feedbackCorrect: "정답입니다!",
-                feedbackIncorrect: "오답입니다."
-            };
-        }
-
-        // 오답 저장 함수
-        function saveWrongAnswer(word, correctAnswer, userAnswer) {
-            const wrongAnswers = JSON.parse(localStorage.getItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY)) || [];
-            
-            // 중복 체크 (같은 단어가 이미 있으면 업데이트)
-            const existingIndex = wrongAnswers.findIndex(item => item.word === word);
-            
-            const wrongAnswerData = {
-                word: word,
-                correctAnswer: correctAnswer,
-                userAnswer: userAnswer,
-                timestamp: new Date().toLocaleDateString('ko-KR')
-            };
-
-            if (existingIndex !== -1) {
-                wrongAnswers[existingIndex] = wrongAnswerData; // 기존 항목 업데이트
-            } else {
-                wrongAnswers.push(wrongAnswerData); // 새 항목 추가
-            }
-
-            localStorage.setItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY, JSON.stringify(wrongAnswers));
-        }
-
-        // 오답노트 렌더링 함수
-        function renderWrongAnswers() {
-            wrongAnswersList.innerHTML = "";
-            const wrongAnswers = JSON.parse(localStorage.getItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY)) || [];
-            
-            if (wrongAnswers.length === 0) {
-                const emptyMessage = document.createElement("li");
-                emptyMessage.style.textAlign = "center";
-                emptyMessage.style.color = "#999";
-                emptyMessage.style.fontStyle = "italic";
-                emptyMessage.style.border = "none";
-                emptyMessage.style.background = "transparent";
-                emptyMessage.textContent = "아직 틀린 문제가 없습니다! 🎉";
-                wrongAnswersList.appendChild(emptyMessage);
-                return;
-            }
-
-            wrongAnswers.forEach((item, index) => {
-                const listItem = document.createElement("li");
-                
-                const contentDiv = document.createElement("div");
-                contentDiv.className = "wrong-answer-content";
-                
-                const wordDiv = document.createElement("div");
-                wordDiv.className = "wrong-answer-word";
-                wordDiv.textContent = item.word;
-                
-                const detailsDiv = document.createElement("div");
-                detailsDiv.className = "wrong-answer-details";
-                detailsDiv.innerHTML = `
-                    정답: <strong>${item.correctAnswer}</strong><br>
-                    선택: <span style="color: #d32f2f;">${item.userAnswer}</span><br>
-                    <small>날짜: ${item.timestamp}</small>
-                `;
-                
-                contentDiv.appendChild(wordDiv);
-                contentDiv.appendChild(detailsDiv);
-                
-                const buttonsDiv = document.createElement("div");
-                buttonsDiv.className = "wrong-answer-buttons";
-                
-                const retryBtn = document.createElement("button");
-                retryBtn.className = "retry-btn";
-                retryBtn.textContent = "다시풀기";
-                retryBtn.onclick = function() {
-                    // 해당 단어로 새로운 퀴즈 생성
-                    quizData = [generateQuizFromWord(item.word, item.correctAnswer)];
-                    renderCards();
-                    // 패널 닫기
-                    wrongAnswersPanel.style.display = "none";
-                };
-                
-                const deleteBtn = document.createElement("button");
-                deleteBtn.className = "delete-wrong-btn";
-                deleteBtn.textContent = "삭제";
-                deleteBtn.onclick = function() {
-                    deleteWrongAnswer(index);
-                };
-                
-                buttonsDiv.appendChild(retryBtn);
-                buttonsDiv.appendChild(deleteBtn);
-                
-                listItem.appendChild(contentDiv);
-                listItem.appendChild(buttonsDiv);
-                wrongAnswersList.appendChild(listItem);
+        document.querySelectorAll('.difficulty-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentDifficulty = this.getAttribute('data-difficulty');
+                populateCurrentWordPool();
+                generateQuiz();
             });
-        }
+        });
 
-        // 특정 오답 삭제 함수
-        function deleteWrongAnswer(index) {
-            let wrongAnswers = JSON.parse(localStorage.getItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY)) || [];
-            wrongAnswers.splice(index, 1);
-            localStorage.setItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY, JSON.stringify(wrongAnswers));
-            renderWrongAnswers();
-        }
+        function generateQuiz() {
+            if (autoNextTimer) clearTimeout(autoNextTimer);
+            const nextQuizInfoElement = document.getElementById('nextQuizInfo');
+            if(nextQuizInfoElement) nextQuizInfoElement.style.display = 'none';
 
-        // 모든 오답 삭제 함수
-        function clearAllWrongAnswers() {
-            if (confirm("모든 오답을 삭제하시겠습니까?")) {
-                localStorage.removeItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY);
-                renderWrongAnswers();
+            if (currentWordPool.length === 0) {
+                populateCurrentWordPool(); 
+                if (currentWordPool.length === 0) { // Still empty (e.g. bad difficulty)
+                    quizGrid.innerHTML = `<p style="color:white; text-align:center;">선택된 난이도에 단어가 없습니다.</p>`;
+                    return;
+                }
             }
+
+            const randomIndex = Math.floor(Math.random() * currentWordPool.length);
+            const correctWord = currentWordPool[randomIndex];
+            
+            const wrongOptions = [];
+            const allWordsInDifficulty = wordsByDifficulty[currentDifficulty];
+            
+            while (wrongOptions.length < 3 && wrongOptions.length < allWordsInDifficulty.length - 1) {
+                const randomWord = allWordsInDifficulty[Math.floor(Math.random() * allWordsInDifficulty.length)];
+                if (randomWord.en !== correctWord.en && !wrongOptions.some(opt => opt.en === randomWord.en)) {
+                    wrongOptions.push(randomWord);
+                }
+            }
+
+            const allOptions = [correctWord, ...wrongOptions].sort(() => Math.random() - 0.5);
+            
+            currentQuiz = {
+                word: correctWord,
+                options: allOptions,
+                answered: false
+            };
+            renderQuiz();
+        }
+        
+        function generateSpecificQuiz(wordData) {
+            if (!wordData) return;
+            if (autoNextTimer) clearTimeout(autoNextTimer);
+             const nextQuizInfoElement = document.getElementById('nextQuizInfo');
+            if(nextQuizInfoElement) nextQuizInfoElement.style.display = 'none';
+
+            const difficultyOfWord = Object.keys(wordsByDifficulty).find(diff => 
+                wordsByDifficulty[diff].some(w => w.en === wordData.en)
+            ) || currentDifficulty;
+
+            const correctWord = wordData;
+            const wrongOptions = [];
+            const allWordsInThisDifficulty = wordsByDifficulty[difficultyOfWord];
+            
+            while (wrongOptions.length < 3 && wrongOptions.length < allWordsInThisDifficulty.length - 1) {
+                const randomWord = allWordsInThisDifficulty[Math.floor(Math.random() * allWordsInThisDifficulty.length)];
+                if (randomWord.en !== correctWord.en && !wrongOptions.some(opt => opt.en === randomWord.en)) {
+                    wrongOptions.push(randomWord);
+                }
+            }
+
+            const allOptions = [correctWord, ...wrongOptions].sort(() => Math.random() - 0.5);
+            
+            currentQuiz = {
+                word: correctWord,
+                options: allOptions,
+                answered: false
+            };
+            renderQuiz();
+            closeAllPanels();
         }
 
-        function createMyQuizDOM(data) {
-            const quizContainer = document.createElement('div');
-            quizContainer.className = 'my-quiz-container';
 
-            const questionSection = document.createElement('div');
-            questionSection.className = 'my-question-section';
-
-            const wordToLearnDiv = document.createElement('div');
-            wordToLearnDiv.className = 'my-word-to-learn';
-            const wordH2 = document.createElement('h2');
-            wordH2.textContent = data.word;
-            const feedbackP = document.createElement('p');
-            feedbackP.className = 'my-feedback';
-            feedbackP.textContent = "뜻을 선택하세요.";
-            feedbackP.style.color = "#777";
-
-            wordToLearnDiv.appendChild(wordH2);
-            wordToLearnDiv.appendChild(feedbackP);
-
-            questionSection.appendChild(wordToLearnDiv);
-            quizContainer.appendChild(questionSection);
-
-            const optionsContainer = document.createElement('div');
-            optionsContainer.className = 'my-options-container';
+        function renderQuiz() {
+            const quizHTML = `
+                <div class="my-quiz-container">
+                    <div class="my-question-section">
+                        <div class="my-word-to-learn">
+                            <h2>${currentQuiz.word.en}</h2>
+                            <p class="my-feedback" id="feedback"></p>
+                        </div>
+                    </div>
+                    <div class="my-options-container">
+                        ${currentQuiz.options.map((option) => `
+                            <div class="my-option" data-answer="${option.ko}" data-correct="${option.en === currentQuiz.word.en}">
+                                ${option.ko}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="next-quiz-info" id="nextQuizInfo" style="display: none;">
+                        3초 후 새로운 문제가 출제됩니다...
+                    </div>
+                </div>
+            `;
+            quizGrid.innerHTML = quizHTML;
             
-            data.choices.forEach(choiceText => {
-                const optionButton = document.createElement('button');
-                optionButton.className = 'my-option';
-                optionButton.textContent = choiceText;
-
-                optionButton.addEventListener('click', () => {
-                    optionButton.classList.add('selected');
-                    
-                    if (choiceText === data.answer) {
-                        optionButton.classList.add('correct-answer');
-                        feedbackP.textContent = data.feedbackCorrect;
-                        feedbackP.style.color = '#28a745';
-                    } else {
-                        optionButton.classList.add('incorrect-answer');
-                        feedbackP.textContent = data.feedbackIncorrect;
-                        feedbackP.style.color = '#dc3545';
-                        
-                        // 오답인 경우 오답노트에 저장
-                        saveWrongAnswer(data.word, data.answer, choiceText);
-                    }
-                    
-                    optionsContainer.querySelectorAll('.my-option').forEach(btn => {
-                        btn.disabled = true;
-                    });
+            document.querySelectorAll('.my-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    if (currentQuiz.answered) return;
+                    handleAnswer(this);
                 });
-                optionsContainer.appendChild(optionButton);
             });
-            quizContainer.appendChild(optionsContainer);
-            return quizContainer;
         }
 
-        let quizData = [generateRandomEnglishQuizData()];
-
-        function renderCards() {
-            const quizGrid = document.getElementById("quizGrid");
-            quizGrid.innerHTML = "";
-            if (quizData && quizData.length > 0 && quizData[0].word !== "Error") {
-                const cardElement = createMyQuizDOM(quizData[0]);
-                quizGrid.appendChild(cardElement);
-            } else if (quizData[0] && quizData[0].word === "Error") {
-                quizGrid.textContent = quizData[0].feedbackIncorrect || "퀴즈를 불러올 수 없습니다.";
+        function handleAnswer(selectedOption) {
+            if (currentQuiz.answered) return;
+            
+            currentQuiz.answered = true;
+            const isCorrect = selectedOption.getAttribute('data-correct') === 'true';
+            const feedback = document.getElementById('feedback');
+            const nextQuizInfo = document.getElementById('nextQuizInfo');
+            
+            document.querySelectorAll('.my-option').forEach(opt => {
+                opt.style.pointerEvents = 'none'; 
+                if (opt.getAttribute('data-correct') === 'true') {
+                    opt.classList.add('correct-answer');
+                }
+            });
+            
+            if (isCorrect) {
+                selectedOption.classList.add('correct-answer'); // Also style the selected one if correct
+                feedback.textContent = '정답입니다! 🎉';
+                feedback.style.color = '#28a745';
+            } else {
+                selectedOption.classList.add('incorrect-answer');
+                feedback.textContent = `틀렸습니다. 정답: ${currentQuiz.word.ko}`;
+                feedback.style.color = '#dc3545';
+                
+                addToWrongAnswers({
+                    word: currentQuiz.word.en,
+                    meaning: currentQuiz.word.ko,
+                    userAnswer: selectedOption.getAttribute('data-answer'),
+                    difficulty: currentDifficulty,
+                    timestamp: new Date().toISOString()
+                });
             }
+            
+            nextQuizInfo.style.display = 'block';
+            autoNextTimer = setTimeout(generateQuiz, 3000);
         }
 
-        // 학습 내용 렌더링 함수
-        function renderStudyNotes() {
-            studyNotesList.innerHTML = "";
-            const notes = JSON.parse(localStorage.getItem(LOCAL_STORAGE_STUDY_NOTES_KEY)) || [];
-            notes.forEach((noteText, index) => {
-                const listItem = document.createElement("li");
-                
-                const textSpan = document.createElement("span");
-                textSpan.textContent = noteText;
-                
-                const deleteBtn = document.createElement("button");
-                deleteBtn.textContent = "삭제";
-                deleteBtn.onclick = function() {
-                    deleteStudyNote(index);
-                };
-
-                listItem.appendChild(textSpan);
-                listItem.appendChild(deleteBtn);
-                studyNotesList.appendChild(listItem);
-            });
-        }
-
-        // 학습 내용 삭제 함수
-        function deleteStudyNote(noteIndex) {
-            let notes = JSON.parse(localStorage.getItem(LOCAL_STORAGE_STUDY_NOTES_KEY)) || [];
-            notes.splice(noteIndex, 1);
-            localStorage.setItem(LOCAL_STORAGE_STUDY_NOTES_KEY, JSON.stringify(notes));
-            renderStudyNotes();
-        }
-
-        // 패널 닫기 함수
-        function closeAllPanels() {
-            studyPanel.style.display = "none";
-            wrongAnswersPanel.style.display = "none";
-        }
-
-        // 이벤트 리스너 설정
-        document.getElementById("refreshBtn").addEventListener("click", () => {
-            quizData = [generateRandomEnglishQuizData()];
-            renderCards();
+        refreshBtn.addEventListener('click', function() {
+            generateQuiz();
         });
 
-        document.getElementById("searchInput").addEventListener("input", (e) => {
-            const query = e.target.value.toLowerCase().trim();
-            const currentQuizContainer = document.querySelector(".my-quiz-container");
-            if (currentQuizContainer) {
-                const wordElement = currentQuizContainer.querySelector(".my-word-to-learn h2");
-                if (wordElement) {
-                    const wordText = wordElement.textContent.toLowerCase();
-                    if (query === "") {
-                        currentQuizContainer.style.border = "";
-                    } else if (wordText.includes(query)) {
-                        currentQuizContainer.style.border = "2px solid gold";
-                    } else {
-                        currentQuizContainer.style.border = "2px solid transparent";
-                    }
+        function loadStudyNotes() {
+            const notes = JSON.parse(localStorage.getItem(LOCAL_STORAGE_STUDY_NOTES_KEY) || '[]');
+            renderStudyNotes(notes);
+        }
+
+        function saveStudyNotes(notes) {
+            localStorage.setItem(LOCAL_STORAGE_STUDY_NOTES_KEY, JSON.stringify(notes));
+        }
+
+        function renderStudyNotes(notes) {
+            studyNotesList.innerHTML = notes.map((note, index) => `
+                <li>
+                    <span>${note.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</span>
+                    <button onclick="deleteStudyNote(${index})">삭제</button>
+                </li>
+            `).join('');
+        }
+
+        window.deleteStudyNote = function(index) {
+            const notes = JSON.parse(localStorage.getItem(LOCAL_STORAGE_STUDY_NOTES_KEY) || '[]');
+            notes.splice(index, 1);
+            saveStudyNotes(notes);
+            renderStudyNotes(notes);
+        }
+
+        addStudyContentBtn.addEventListener('click', function() {
+            const content = studyContent.value.trim();
+            if (content) {
+                const notes = JSON.parse(localStorage.getItem(LOCAL_STORAGE_STUDY_NOTES_KEY) || '[]');
+                notes.push(content);
+                saveStudyNotes(notes);
+                renderStudyNotes(notes);
+                studyContent.value = '';
+            }
+        });
+
+        function loadWrongAnswers() {
+            const wrongAnswers = JSON.parse(localStorage.getItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY) || '[]');
+            renderWrongAnswers(wrongAnswers);
+        }
+
+        function saveWrongAnswers(wrongAnswers) {
+            localStorage.setItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY, JSON.stringify(wrongAnswers));
+        }
+
+        function addToWrongAnswers(wrongAnswer) {
+            const wrongAnswers = JSON.parse(localStorage.getItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY) || '[]');
+            const existingIndex = wrongAnswers.findIndex(item => item.word === wrongAnswer.word);
+            if (existingIndex !== -1) {
+                wrongAnswers[existingIndex] = wrongAnswer; 
+            } else {
+                wrongAnswers.push(wrongAnswer);
+            }
+            saveWrongAnswers(wrongAnswers);
+            renderWrongAnswers(wrongAnswers);
+        }
+
+        function renderWrongAnswers(wrongAnswers) {
+            wrongAnswersList.innerHTML = wrongAnswers.map((item, index) => `
+                <li>
+                    <div class="wrong-answer-content">
+                        <div class="wrong-answer-word">${item.word}</div>
+                        <div class="wrong-answer-details">
+                            정답: ${item.meaning} <br>
+                            내 답: ${item.userAnswer} <br>
+                            난이도: ${item.difficulty} <br>
+                            시간: ${new Date(item.timestamp).toLocaleString()}
+                        </div>
+                    </div>
+                    <div class="wrong-answer-buttons">
+                        <button class="retry-btn" onclick="retryWrongAnswer(${index})">다시 풀기</button>
+                        <button class="delete-wrong-btn" onclick="deleteWrongAnswer(${index})">삭제</button>
+                    </div>
+                </li>
+            `).join('');
+            clearAllWrongBtn.style.display = wrongAnswers.length > 0 ? 'block' : 'none';
+        }
+
+        window.deleteWrongAnswer = function(index) {
+            const wrongAnswers = JSON.parse(localStorage.getItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY) || '[]');
+            wrongAnswers.splice(index, 1);
+            saveWrongAnswers(wrongAnswers);
+            renderWrongAnswers(wrongAnswers);
+        }
+
+        window.retryWrongAnswer = function(index) {
+            const wrongAnswers = JSON.parse(localStorage.getItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY) || '[]');
+            const itemToRetry = wrongAnswers[index];
+            let wordData = null;
+            let difficultyOfWord = null;
+
+            for (const diff in wordsByDifficulty) {
+                const found = wordsByDifficulty[diff].find(w => w.en === itemToRetry.word);
+                if (found) {
+                    wordData = found;
+                    difficultyOfWord = diff;
+                    break;
                 }
             }
-        });
 
-        document.getElementById("homeLink").addEventListener("click", (e) => {
-            e.preventDefault();
-            window.location.reload();
-        });
+            if (wordData) {
+                wrongAnswers.splice(index, 1);
+                saveWrongAnswers(wrongAnswers);
+                renderWrongAnswers(wrongAnswers);
 
-        // 학습 내용 패널 토글
-        studyNav.addEventListener("click", (e) => {
-            e.preventDefault();
-            closeAllPanels();
-            if (studyPanel.style.display !== "block") {
-                studyPanel.style.display = "block";
-                renderStudyNotes();
+                document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+                const difficultyBtn = document.querySelector(`.difficulty-btn[data-difficulty="${difficultyOfWord}"]`);
+                if (difficultyBtn) difficultyBtn.classList.add('active');
+                
+                currentDifficulty = difficultyOfWord;
+                populateCurrentWordPool();
+                generateSpecificQuiz(wordData);
+            } else {
+                alert("오류: 해당 단어를 찾을 수 없어 다시 풀 수 없습니다. 목록에서만 삭제합니다.");
+                deleteWrongAnswer(index);
+            }
+        }
+
+        clearAllWrongBtn.addEventListener('click', function() {
+            if (confirm('정말로 모든 오답 기록을 삭제하시겠습니까?')) {
+                saveWrongAnswers([]);
+                renderWrongAnswers([]);
             }
         });
 
-        // 오답노트 패널 토글
-        wrongAnswersNav.addEventListener("click", (e) => {
-            e.preventDefault();
-            closeAllPanels();
-            if (wrongAnswersPanel.style.display !== "block") {
-                wrongAnswersPanel.style.display = "block";
-                renderWrongAnswers();
-            }
-        });
+        function closeAllPanels() {
+            allPanels.forEach(panel => panel.style.display = 'none');
+        }
 
-        // 학습 내용 추가 버튼 이벤트 리스너
-        addStudyContentBtn.addEventListener("click", () => {
-            const noteText = studyContent.value.trim();
-            if (noteText === "") {
-                alert("학습 내용을 입력해주세요.");
+        function togglePanelVisibility(panelToShow) {
+            const isCurrentlyVisible = panelToShow.style.display === 'block';
+            closeAllPanels();
+            if (!isCurrentlyVisible) {
+                panelToShow.style.display = 'block';
+            }
+        }
+
+        studyNav.addEventListener('click', (e) => { e.preventDefault(); togglePanelVisibility(studyPanel); });
+        wrongAnswersNav.addEventListener('click', (e) => { e.preventDefault(); togglePanelVisibility(wrongAnswersPanel); });
+        homeLink.addEventListener('click', (e) => { e.preventDefault(); closeAllPanels(); });
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            if (searchTerm.length === 0) {
+                searchResults.style.display = 'none';
+                searchResultsContent.innerHTML = '';
                 return;
             }
 
-            const notes = JSON.parse(localStorage.getItem(LOCAL_STORAGE_STUDY_NOTES_KEY)) || [];
-            notes.push(noteText);
-            localStorage.setItem(LOCAL_STORAGE_STUDY_NOTES_KEY, JSON.stringify(notes));
+            const results = [];
+            for (const difficulty in wordsByDifficulty) {
+                wordsByDifficulty[difficulty].forEach(wordPair => {
+                    if (wordPair.en.toLowerCase().includes(searchTerm) || wordPair.ko.toLowerCase().includes(searchTerm)) {
+                        if (!results.some(r => r.en === wordPair.en)) {
+                            results.push(wordPair);
+                        }
+                    }
+                });
+            }
+            
+            closeAllPanels(); // Close other panels before showing search results
+            searchResults.style.display = 'block'; // Show panel even if no results to display message
 
-            studyContent.value = "";
-            renderStudyNotes();
+            if (results.length > 0) {
+                searchResultsContent.innerHTML = results.map(item => `
+                    <div class="search-result-item">
+                        <span class="search-word">${item.en}</span>: 
+                        <span class="search-meaning">${item.ko}</span>
+                    </div>
+                `).join('');
+            } else {
+                searchResultsContent.innerHTML = '<p style="color: #666; text-align: center;">검색 결과가 없습니다.</p>';
+            }
+        });
+        
+        searchInput.addEventListener('focus', function() {
+            if (this.value.trim().length > 0) { // Only show if there's existing text
+                closeAllPanels();
+                searchResults.style.display = 'block';
+            }
         });
 
-        // 모든 오답 삭제 버튼 이벤트 리스너
-        clearAllWrongBtn.addEventListener("click", clearAllWrongAnswers);
+        document.addEventListener('click', function(event) {
+            const isHeaderClick = event.target.closest('header');
+            const isPanelClick = allPanels.some(panel => panel.style.display === 'block' && panel.contains(event.target));
 
-        // 외부 클릭 시 패널 닫기
-        document.addEventListener("click", (e) => {
-            if (!studyPanel.contains(e.target) && !studyNav.contains(e.target) &&
-                !wrongAnswersPanel.contains(e.target) && !wrongAnswersNav.contains(e.target)) {
+            if (!isHeaderClick && !isPanelClick) {
                 closeAllPanels();
             }
         });
 
-        // 초기화
-        populateWordPool(200);
-        renderCards();
-        renderStudyNotes();
-        renderWrongAnswers();
     </script>
 </body>
 </html>
