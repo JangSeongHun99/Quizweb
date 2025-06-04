@@ -73,7 +73,7 @@
         .header-right {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px; 
         }
 
         .header-right a {
@@ -97,7 +97,7 @@
         .panel {
             display: none;
             position: absolute;
-            top: calc(100% + 10px); /* Adjusted to be below the header */
+            top: calc(100% + 10px); 
             right: 20px;
             width: 450px;
             background: rgba(255,255,255,0.95);
@@ -105,16 +105,14 @@
             border: 1px solid rgba(255,255,255,0.3);
             border-radius: 16px;
             padding: 25px;
-            z-index: 1001; /* Ensure panel is above other header content but below modals if any */
+            z-index: 1001; 
             box-shadow: 0 8px 32px rgba(0,0,0,0.2);
         }
         
-        /* Specific panel positioning for search results to align with search bar if needed */
         #searchResults.panel {
-             left: 20px; /* Or align as needed, this is a generic positioning */
-             right: auto; /* Override general right:20px if it's meant to be under search input */
+             left: 20px; 
+             right: auto; 
         }
-
 
         .panel h2 { 
             margin-top:0;
@@ -123,6 +121,59 @@
             color: #333;
             font-weight: 700;
         }
+
+        #addWordPanel label {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            color: #444; 
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        #addWordPanel input[type="text"], 
+        #addWordPanel select {
+            width: 100%; 
+            padding: 12px;
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            margin-bottom: 15px; 
+            box-sizing: border-box;
+            font-size: 1em;
+            background-color: #fff; 
+            color: #333;
+        }
+        #addWordPanel input[type="text"]:focus, 
+        #addWordPanel select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+            outline: none;
+        }
+        #addWordPanel button#confirmAddWordBtn { 
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: linear-gradient(45deg, #5cb85c, #4cae4c); 
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 600;
+            display: block; 
+            width: 100%;
+        }
+        #addWordPanel button#confirmAddWordBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(92, 184, 92, 0.4);
+        }
+        #addWordFeedback {
+            margin-top:15px; 
+            min-height:1.2em; 
+            font-size: 0.9em;
+            font-weight: 500;
+            text-align: center;
+        }
+
 
         #studyContent {
             padding: 12px;
@@ -220,7 +271,7 @@
             border-radius: 12px;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start; /* Align items to the top for better layout with multi-line text */
+            align-items: flex-start; 
             transition: all 0.3s ease;
         }
 
@@ -231,7 +282,7 @@
 
         .wrong-answer-content {
             flex: 1;
-            margin-right: 10px; /* Add some space between content and buttons */
+            margin-right: 10px; 
         }
 
         .wrong-answer-word {
@@ -251,7 +302,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            align-items: flex-end; /* Align buttons to the right */
+            align-items: flex-end; 
         }
 
         .retry-btn, .delete-wrong-btn {
@@ -262,7 +313,7 @@
             font-size: 0.8em;
             font-weight: 600;
             transition: all 0.3s ease;
-            min-width: 80px; /* Ensure buttons have a decent width */
+            min-width: 80px; 
             text-align: center;
         }
 
@@ -297,7 +348,7 @@
             font-weight: 600;
             margin-top: 15px;
             transition: all 0.3s ease;
-            display: block; /* Make it a block to center or control width better if needed */
+            display: block; 
             margin-left: auto;
             margin-right: auto;
         }
@@ -443,7 +494,7 @@
             font-size: 1.2em;
             font-weight: 600;
             margin: 0;
-            min-height: 1.5em; /* Ensure space for feedback text */
+            min-height: 1.5em; 
             transition: all 0.3s ease;
         }
 
@@ -520,17 +571,8 @@
             75% { transform: translateX(5px); }
         }
 
-        .my-option.correct-answer::after { 
-            content: ' ✓'; /* Added space */
-            font-weight: bold; 
-        }
 
-        .my-option.incorrect-answer::after { 
-            content: ' ✗'; /* Added space */
-            font-weight: bold; 
-        }
-
-        .my-option:disabled { /* Not directly used, but good practice for visual cue if needed */
+        .my-option:disabled { 
             cursor: not-allowed;
             opacity: 0.7;
         }
@@ -544,14 +586,33 @@
             background: rgba(102, 126, 234, 0.1);
             border-radius: 8px;
             border-left: 4px solid #667eea;
+            text-align: center; /* Center the text */
         }
 
-        .search-results { /* Style for the search results container (panel itself) */
-            margin-top: 15px; /* This might be overridden by panel style */
+        .next-quiz-info .progress-bar-container {
+            width: 90%; /* Make it slightly less than full width of the info box */
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 8px auto 0; /* Center the progress bar container */
+            height: 8px; 
+            overflow: hidden; 
         }
 
-        #searchResultsContent { /* Style for content within search panel */
-             max-height: 300px; /* Example max height */
+        .next-quiz-info .progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background-color: #667eea; /* Match theme color */
+            border-radius: 5px;
+            transition: width 3s linear; 
+        }
+
+
+        .search-results { 
+            margin-top: 15px; 
+        }
+
+        #searchResultsContent { 
+             max-height: 300px; 
              overflow-y: auto;
         }
 
@@ -571,7 +632,7 @@
         }
 
         .search-meaning {
-            color: #555; /* Darker than #666 for better contrast */
+            color: #555; 
             margin-left: 10px;
         }
 
@@ -579,7 +640,7 @@
             .header-container {
                 flex-direction: column;
                 gap: 15px;
-                padding: 15px; /* Adjusted padding for header container */
+                padding: 15px; 
             }
 
             .header-left {
@@ -590,16 +651,16 @@
             .header-right {
                 width: 100%;
                 justify-content: center;
-                gap: 10px; /* Reduced gap for smaller screens */
+                gap: 10px; 
             }
-             .header-right a {
-                padding: 8px 12px; /* Slightly smaller padding for buttons */
+            .header-right a {
+                padding: 8px 12px; 
             }
 
             #searchInput { 
-                width: auto; /* Allow search input to take available space or set specific */
-                flex-grow: 1; /* Example: allow it to grow if logo is small */
-                max-width: 250px; /* Max width on mobile */
+                width: auto; 
+                flex-grow: 1; 
+                max-width: 250px; 
             }
 
             .my-quiz-container { 
@@ -618,11 +679,10 @@
 
             .panel { 
                 width: calc(100% - 30px); 
-                left: 15px; /* Center panel on smaller screens */
+                left: 15px; 
                 right: 15px; 
-                top: calc(100% + 5px); /* Slightly closer to header */
+                top: calc(100% + 5px); 
             }
-             /* Ensure search results panel also follows this rule */
             #searchResults.panel {
                  left: 15px;
                  right: 15px;
@@ -631,20 +691,20 @@
 
             .difficulty-container { 
                 flex-direction: column;
-                align-items: stretch; /* Make buttons full width in column */
+                align-items: stretch; 
                 gap: 10px;
             }
             .difficulty-label {
-                margin-right: 0; /* Remove right margin when in column */
-                margin-bottom: 5px; /* Add bottom margin */
+                margin-right: 0; 
+                margin-bottom: 5px; 
                 text-align: center;
             }
 
             .difficulty-btn { 
                 padding: 10px 20px; 
                 font-size: 0.9em; 
-                width: 100%; /* Make buttons take full width available */
-                box-sizing: border-box; /* Include padding and border in element's total width */
+                width: 100%; 
+                box-sizing: border-box; 
             }
 
             .container h1 {
@@ -663,7 +723,7 @@
             }
             
             .header-left {
-                flex-direction: column; /* Stack logo and search on very small screens */
+                flex-direction: column; 
                 align-items: center;
                 gap: 10px;
             }
@@ -674,7 +734,7 @@
             .container {
                 padding: 20px 15px;
             }
-             .header-right a {
+            .header-right a {
                 font-size: 0.9em;
                 padding: 6px 10px;
             }
@@ -685,53 +745,69 @@
     <header>
         <div class="header-container">
             <div class="header-left">
-                <a href="#" class="logo">🎓 EduQuiz</a>
+                <a href="#" class="logo">EduQuiz</a>
                 <input type="text" id="searchInput" placeholder="영어 단어 검색...">
             </div>
             <div class="header-right">
-                <a href="#" id="homeLink">🏠 홈</a>
-                <a href="#" id="studyNav">📚 학습내용</a>
-                <a href="#" id="wrongAnswersNav">❌ 오답노트</a>
+                <a href="#" id="homeLink">홈</a>
+                <a href="#" id="addWordNav">문제 추가</a>
+                <a href="#" id="studyNav">학습내용</a>
+                <a href="#" id="wrongAnswersNav">오답노트</a>
             </div>
         </div>
         
+        <div id="addWordPanel" class="panel">
+            <h2>문제 추가</h2>
+            <label for="newEngWordInput">영어 단어:</label>
+            <input type="text" id="newEngWordInput" placeholder="예: apple">
+            <label for="newKorMeaningInput">한국어 뜻:</label>
+            <input type="text" id="newKorMeaningInput" placeholder="예: 사과">
+            <label for="newWordDifficultySelect">난이도:</label>
+            <select id="newWordDifficultySelect">
+                <option value="easy">쉬움</option>
+                <option value="medium">보통</option>
+                <option value="hard">어려움</option>
+            </select>
+            <button id="confirmAddWordBtn">단어 추가하기</button>
+            <p id="addWordFeedback"></p>
+        </div>
+
         <div id="studyPanel" class="panel">
-            <h2>📚 학습 내용 관리</h2>
+            <h2>학습 내용 관리</h2>
             <textarea id="studyContent" placeholder="학습한 내용이나 메모를 입력하세요..."></textarea>
-            <button id="addStudyContentBtn">✅ 학습 내용 추가</button>
+            <button id="addStudyContentBtn">학습 내용 추가</button>
             <ul id="studyNotesList"></ul>
         </div>
 
         <div id="wrongAnswersPanel" class="panel">
-            <h2>❌ 오답노트</h2>
+            <h2>오답노트</h2>
             <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">틀린 문제들이 자동으로 저장되어 복습할 수 있습니다.</p>
             <ul id="wrongAnswersList"></ul>
-            <button id="clearAllWrongBtn" class="clear-all-wrong-btn" style="display:none;">🗑️ 모든 오답 삭제</button>
+            <button id="clearAllWrongBtn" class="clear-all-wrong-btn" style="display:none;">모든 오답 삭제</button>
         </div>
 
         <div id="searchResults" class="panel">
-            <h2>🔍 검색 결과</h2>
+            <h2>검색 결과</h2>
             <div id="searchResultsContent"></div>
         </div>
     </header>
 
     <div class="container">
-        <h1>🌟 영어 단어 퀴즈</h1>
+        <h1>영어 단어 퀴즈</h1>
         
         <div class="difficulty-container">
-            <span class="difficulty-label">🎯 난이도 선택:</span>
-            <button class="difficulty-btn easy active" data-difficulty="easy">🟢 쉬움 (기초)</button>
-            <button class="difficulty-btn medium" data-difficulty="medium">🟡 보통 (중급)</button>
-            <button class="difficulty-btn hard" data-difficulty="hard">🔴 어려움 (고급)</button>
+            <span class="difficulty-label">난이도 선택:</span>
+            <button class="difficulty-btn easy active" data-difficulty="easy">쉬움 (기초)</button>
+            <button class="difficulty-btn medium" data-difficulty="medium">보통 (중급)</button>
+            <button class="difficulty-btn hard" data-difficulty="hard">어려움 (고급)</button>
         </div>
         
-        <button class="refresh-btn" id="refreshBtn">🔄 새로운 문제</button>
+        <button class="refresh-btn" id="refreshBtn">새로운 문제</button>
         <div class="quiz-grid" id="quizGrid"></div>
     </div>
 
     <script>
-        // 난이도별 단어 데이터
-        const wordsByDifficulty = {
+        const baseWordsByDifficulty = {
             easy: [
                 { en: "apple", ko: "사과" }, { en: "book", ko: "책" }, { en: "car", ko: "자동차" },
                 { en: "dog", ko: "개" }, { en: "house", ko: "집" }, { en: "tree", ko: "나무" },
@@ -774,6 +850,8 @@
             ]
         };
 
+        let wordsByDifficulty = JSON.parse(JSON.stringify(baseWordsByDifficulty)); 
+
         let currentDifficulty = 'easy';
         let currentWordPool = [];
         let currentQuiz = null;
@@ -781,6 +859,7 @@
         
         const LOCAL_STORAGE_STUDY_NOTES_KEY = 'engVocabStudyNotes';
         const LOCAL_STORAGE_WRONG_ANSWERS_KEY = 'engVocabWrongAnswers';
+        const LOCAL_STORAGE_CUSTOM_WORDS_KEY = 'engVocabCustomWords';
         
         const studyNav = document.getElementById("studyNav");
         const studyPanel = document.getElementById("studyPanel");
@@ -797,13 +876,66 @@
         const searchResults = document.getElementById("searchResults");
         const searchResultsContent = document.getElementById("searchResultsContent");
 
+        const addWordNav = document.getElementById("addWordNav");
+        const addWordPanel = document.getElementById("addWordPanel");
+        const newEngWordInput = document.getElementById("newEngWordInput");
+        const newKorMeaningInput = document.getElementById("newKorMeaningInput");
+        const newWordDifficultySelect = document.getElementById("newWordDifficultySelect");
+        const confirmAddWordBtn = document.getElementById("confirmAddWordBtn");
+        const addWordFeedback = document.getElementById("addWordFeedback");
+
         const homeLink = document.getElementById("homeLink");
         const refreshBtn = document.getElementById("refreshBtn");
         const quizGrid = document.getElementById("quizGrid");
 
-        const allPanels = [studyPanel, wrongAnswersPanel, searchResults];
+        const allPanels = [studyPanel, wrongAnswersPanel, searchResults, addWordPanel];
+
+        function closeAllPanels() {
+            allPanels.forEach(panel => panel.style.display = 'none');
+        }
+
+        function togglePanelVisibility(panelToShow) {
+            const isCurrentlyVisible = panelToShow.style.display === 'block';
+            closeAllPanels(); 
+            if (!isCurrentlyVisible) {
+                panelToShow.style.display = 'block';
+            }
+        }
+        
+        function loadCustomWords() {
+            const customWordsStorage = JSON.parse(localStorage.getItem(LOCAL_STORAGE_CUSTOM_WORDS_KEY) || '{}');
+            wordsByDifficulty = JSON.parse(JSON.stringify(baseWordsByDifficulty));
+
+            for (const difficulty in customWordsStorage) {
+                if (wordsByDifficulty[difficulty] && Array.isArray(customWordsStorage[difficulty])) {
+                    customWordsStorage[difficulty].forEach(customWord => {
+                        if (!wordsByDifficulty[difficulty].some(existingWord => existingWord.en.toLowerCase() === customWord.en.toLowerCase())) {
+                            wordsByDifficulty[difficulty].push(customWord);
+                        }
+                    });
+                } else if (Array.isArray(customWordsStorage[difficulty])) { 
+                     wordsByDifficulty[difficulty] = [...customWordsStorage[difficulty]]; 
+                }
+            }
+        }
+
+        function saveCustomWord(wordObject, difficulty) {
+            let customWordsStorage = JSON.parse(localStorage.getItem(LOCAL_STORAGE_CUSTOM_WORDS_KEY) || '{}');
+            if (!customWordsStorage[difficulty]) {
+                customWordsStorage[difficulty] = [];
+            }
+            
+            if (!customWordsStorage[difficulty].some(cw => cw.en.toLowerCase() === wordObject.en.toLowerCase())) {
+                customWordsStorage[difficulty].push(wordObject);
+                localStorage.setItem(LOCAL_STORAGE_CUSTOM_WORDS_KEY, JSON.stringify(customWordsStorage));
+                return true; 
+            }
+            return false; 
+        }
+
 
         document.addEventListener('DOMContentLoaded', function() {
+            loadCustomWords(); 
             populateCurrentWordPool();
             generateQuiz();
             loadStudyNotes();
@@ -811,6 +943,58 @@
             
             const initialWrongAnswers = JSON.parse(localStorage.getItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY) || '[]');
             clearAllWrongBtn.style.display = initialWrongAnswers.length > 0 ? 'block' : 'none';
+
+            homeLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                closeAllPanels();
+                generateQuiz(); 
+            });
+            studyNav.addEventListener('click', (e) => { e.preventDefault(); togglePanelVisibility(studyPanel); });
+            wrongAnswersNav.addEventListener('click', (e) => { e.preventDefault(); togglePanelVisibility(wrongAnswersPanel); });
+            addWordNav.addEventListener('click', (e) => { e.preventDefault(); togglePanelVisibility(addWordPanel); });
+            
+            searchInput.addEventListener('focus', () => {
+                closeAllPanels();
+                searchResults.style.display = 'block';
+            });
+
+            confirmAddWordBtn.addEventListener('click', () => {
+                const eng = newEngWordInput.value.trim();
+                const kor = newKorMeaningInput.value.trim();
+                const diff = newWordDifficultySelect.value;
+
+                addWordFeedback.textContent = ''; 
+
+                if (!eng || !kor) {
+                    addWordFeedback.textContent = "단어와 뜻을 모두 입력해주세요.";
+                    addWordFeedback.style.color = "red";
+                    return;
+                }
+
+                const newWord = { en: eng, ko: kor };
+
+                if (wordsByDifficulty[diff].some(word => word.en.toLowerCase() === newWord.en.toLowerCase())) {
+                    addWordFeedback.textContent = "이미 목록에 존재하는 단어입니다.";
+                    addWordFeedback.style.color = "orange";
+                    return;
+                }
+                
+                wordsByDifficulty[diff].push(newWord); 
+                
+                if (saveCustomWord(newWord, diff)) { 
+                    addWordFeedback.textContent = "단어가 성공적으로 추가되었습니다!";
+                    addWordFeedback.style.color = "green";
+                    newEngWordInput.value = '';
+                    newKorMeaningInput.value = '';
+                } else {
+                    addWordFeedback.textContent = "이미 추가된 단어입니다 (저장소 확인).";
+                    addWordFeedback.style.color = "orange";
+                }
+
+                if (currentDifficulty === diff) {
+                    populateCurrentWordPool();
+                }
+            });
         });
 
         function populateCurrentWordPool() {
@@ -819,6 +1003,7 @@
 
         document.querySelectorAll('.difficulty-btn').forEach(btn => {
             btn.addEventListener('click', function() {
+                closeAllPanels();
                 document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
                 currentDifficulty = this.getAttribute('data-difficulty');
@@ -827,15 +1012,26 @@
             });
         });
 
+        refreshBtn.addEventListener('click', () => {
+            closeAllPanels();
+            generateQuiz();
+        });
+
+
         function generateQuiz() {
             if (autoNextTimer) clearTimeout(autoNextTimer);
-            const nextQuizInfoElement = document.getElementById('nextQuizInfo');
+            
+            const nextQuizInfoElement = document.getElementById('nextQuizInfo'); 
+            const progressBarFillElement = document.getElementById('nextQuizProgressBar'); 
+
             if(nextQuizInfoElement) nextQuizInfoElement.style.display = 'none';
+            if(progressBarFillElement) progressBarFillElement.style.width = '0%'; 
+
 
             if (currentWordPool.length === 0) {
                 populateCurrentWordPool(); 
-                if (currentWordPool.length === 0) { // Still empty (e.g. bad difficulty)
-                    quizGrid.innerHTML = `<p style="color:white; text-align:center;">선택된 난이도에 단어가 없습니다.</p>`;
+                if (currentWordPool.length === 0) { 
+                    quizGrid.innerHTML = `<p style="color:white; text-align:center;">선택된 난이도에 단어가 없습니다. '문제 추가' 기능을 이용해 단어를 추가해보세요.</p>`;
                     return;
                 }
             }
@@ -844,13 +1040,16 @@
             const correctWord = currentWordPool[randomIndex];
             
             const wrongOptions = [];
-            const allWordsInDifficulty = wordsByDifficulty[currentDifficulty];
+            const allWordsInDifficulty = wordsByDifficulty[currentDifficulty]; 
             
-            while (wrongOptions.length < 3 && wrongOptions.length < allWordsInDifficulty.length - 1) {
-                const randomWord = allWordsInDifficulty[Math.floor(Math.random() * allWordsInDifficulty.length)];
-                if (randomWord.en !== correctWord.en && !wrongOptions.some(opt => opt.en === randomWord.en)) {
+            let attempts = 0;
+            while (wrongOptions.length < 3 && wrongOptions.length < allWordsInDifficulty.length - 1 && attempts < 100) {
+                const randomWordIndex = Math.floor(Math.random() * allWordsInDifficulty.length);
+                const randomWord = allWordsInDifficulty[randomWordIndex];
+                if (randomWord.en.toLowerCase() !== correctWord.en.toLowerCase() && !wrongOptions.some(opt => opt.en.toLowerCase() === randomWord.en.toLowerCase())) {
                     wrongOptions.push(randomWord);
                 }
+                attempts++;
             }
 
             const allOptions = [correctWord, ...wrongOptions].sort(() => Math.random() - 0.5);
@@ -865,23 +1064,30 @@
         
         function generateSpecificQuiz(wordData) {
             if (!wordData) return;
+            closeAllPanels();
             if (autoNextTimer) clearTimeout(autoNextTimer);
-             const nextQuizInfoElement = document.getElementById('nextQuizInfo');
+
+            const nextQuizInfoElement = document.getElementById('nextQuizInfo');
+            const progressBarFillElement = document.getElementById('nextQuizProgressBar');
+
             if(nextQuizInfoElement) nextQuizInfoElement.style.display = 'none';
+            if(progressBarFillElement) progressBarFillElement.style.width = '0%';
 
             const difficultyOfWord = Object.keys(wordsByDifficulty).find(diff => 
-                wordsByDifficulty[diff].some(w => w.en === wordData.en)
-            ) || currentDifficulty;
+                wordsByDifficulty[diff].some(w => w.en.toLowerCase() === wordData.en.toLowerCase())
+            ) || currentDifficulty; 
 
             const correctWord = wordData;
             const wrongOptions = [];
             const allWordsInThisDifficulty = wordsByDifficulty[difficultyOfWord];
             
-            while (wrongOptions.length < 3 && wrongOptions.length < allWordsInThisDifficulty.length - 1) {
+            let attempts = 0;
+            while (wrongOptions.length < 3 && wrongOptions.length < allWordsInThisDifficulty.length - 1 && attempts < 100) {
                 const randomWord = allWordsInThisDifficulty[Math.floor(Math.random() * allWordsInThisDifficulty.length)];
-                if (randomWord.en !== correctWord.en && !wrongOptions.some(opt => opt.en === randomWord.en)) {
+                if (randomWord.en.toLowerCase() !== correctWord.en.toLowerCase() && !wrongOptions.some(opt => opt.en.toLowerCase() === randomWord.en.toLowerCase())) {
                     wrongOptions.push(randomWord);
                 }
+                attempts++;
             }
 
             const allOptions = [correctWord, ...wrongOptions].sort(() => Math.random() - 0.5);
@@ -892,7 +1098,6 @@
                 answered: false
             };
             renderQuiz();
-            closeAllPanels();
         }
 
 
@@ -907,255 +1112,204 @@
                     </div>
                     <div class="my-options-container">
                         ${currentQuiz.options.map((option) => `
-                            <div class="my-option" data-answer="${option.ko}" data-correct="${option.en === currentQuiz.word.en}">
+                            <div class="my-option" data-answer="${option.ko}" data-correct="${option.en.toLowerCase() === currentQuiz.word.en.toLowerCase()}">
                                 ${option.ko}
                             </div>
                         `).join('')}
                     </div>
                     <div class="next-quiz-info" id="nextQuizInfo" style="display: none;">
                         3초 후 새로운 문제가 출제됩니다...
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" id="nextQuizProgressBar"></div>
+                        </div>
                     </div>
                 </div>
             `;
             quizGrid.innerHTML = quizHTML;
-            
-            document.querySelectorAll('.my-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    if (currentQuiz.answered) return;
-                    handleAnswer(this);
-                });
+
+            document.querySelectorAll('.my-option').forEach(optionElement => {
+                optionElement.addEventListener('click', handleOptionClick);
             });
         }
 
-        function handleAnswer(selectedOption) {
+        function handleOptionClick(event) {
             if (currentQuiz.answered) return;
-            
             currentQuiz.answered = true;
-            const isCorrect = selectedOption.getAttribute('data-correct') === 'true';
-            const feedback = document.getElementById('feedback');
-            const nextQuizInfo = document.getElementById('nextQuizInfo');
-            
-            document.querySelectorAll('.my-option').forEach(opt => {
-                opt.style.pointerEvents = 'none'; 
-                if (opt.getAttribute('data-correct') === 'true') {
-                    opt.classList.add('correct-answer');
+
+            const selectedOptionElement = event.target;
+            const isCorrect = selectedOptionElement.getAttribute('data-correct') === 'true';
+            const feedbackElement = document.getElementById('feedback');
+            const allOptionElements = document.querySelectorAll('.my-option');
+
+            allOptionElements.forEach(opt => {
+                opt.removeEventListener('click', handleOptionClick); 
+                opt.classList.add(opt.getAttribute('data-correct') === 'true' ? 'correct-answer' : 'selected'); 
+                if (opt !== selectedOptionElement && opt.getAttribute('data-correct') !== 'true') {
+                    opt.style.opacity = '0.6'; 
                 }
             });
             
+            selectedOptionElement.classList.remove('selected');
+
             if (isCorrect) {
-                selectedOption.classList.add('correct-answer'); // Also style the selected one if correct
-                feedback.textContent = '정답입니다! 🎉';
-                feedback.style.color = '#28a745';
+                selectedOptionElement.classList.add('correct-answer');
+                feedbackElement.textContent = "정답입니다!";
+                feedbackElement.style.color = "#28a745";
             } else {
-                selectedOption.classList.add('incorrect-answer');
-                feedback.textContent = `틀렸습니다. 정답: ${currentQuiz.word.ko}`;
-                feedback.style.color = '#dc3545';
-                
-                addToWrongAnswers({
-                    word: currentQuiz.word.en,
-                    meaning: currentQuiz.word.ko,
-                    userAnswer: selectedOption.getAttribute('data-answer'),
-                    difficulty: currentDifficulty,
-                    timestamp: new Date().toISOString()
-                });
+                selectedOptionElement.classList.add('incorrect-answer');
+                feedbackElement.textContent = `오답입니다. 정답: ${currentQuiz.word.ko}`;
+                feedbackElement.style.color = "#dc3545";
+                addWrongAnswer(currentQuiz.word);
             }
             
-            nextQuizInfo.style.display = 'block';
+            const nextQuizInfoElement = document.getElementById('nextQuizInfo');
+            const progressBarFillElement = document.getElementById('nextQuizProgressBar');
+            
+            if (nextQuizInfoElement && progressBarFillElement) {
+                nextQuizInfoElement.style.display = 'block';
+                progressBarFillElement.style.transition = 'none'; // Disable transition for reset
+                progressBarFillElement.style.width = '0%'; 
+                
+                // Force reflow/repaint
+                void progressBarFillElement.offsetWidth; 
+                
+                progressBarFillElement.style.transition = 'width 3s linear'; // Re-enable transition
+                progressBarFillElement.style.width = '100%'; 
+            }
+            
             autoNextTimer = setTimeout(generateQuiz, 3000);
         }
 
-        refreshBtn.addEventListener('click', function() {
-            generateQuiz();
-        });
-
         function loadStudyNotes() {
             const notes = JSON.parse(localStorage.getItem(LOCAL_STORAGE_STUDY_NOTES_KEY) || '[]');
-            renderStudyNotes(notes);
+            studyNotesList.innerHTML = '';
+            notes.forEach((note, index) => {
+                const li = document.createElement('li');
+                li.textContent = note.text;
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = '삭제';
+                deleteBtn.onclick = () => deleteStudyNote(index);
+                li.appendChild(deleteBtn);
+                studyNotesList.appendChild(li);
+            });
         }
 
-        function saveStudyNotes(notes) {
-            localStorage.setItem(LOCAL_STORAGE_STUDY_NOTES_KEY, JSON.stringify(notes));
-        }
-
-        function renderStudyNotes(notes) {
-            studyNotesList.innerHTML = notes.map((note, index) => `
-                <li>
-                    <span>${note.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</span>
-                    <button onclick="deleteStudyNote(${index})">삭제</button>
-                </li>
-            `).join('');
-        }
-
-        window.deleteStudyNote = function(index) {
-            const notes = JSON.parse(localStorage.getItem(LOCAL_STORAGE_STUDY_NOTES_KEY) || '[]');
-            notes.splice(index, 1);
-            saveStudyNotes(notes);
-            renderStudyNotes(notes);
-        }
-
-        addStudyContentBtn.addEventListener('click', function() {
-            const content = studyContent.value.trim();
-            if (content) {
+        addStudyContentBtn.addEventListener('click', () => {
+            const text = studyContent.value.trim();
+            if (text) {
                 const notes = JSON.parse(localStorage.getItem(LOCAL_STORAGE_STUDY_NOTES_KEY) || '[]');
-                notes.push(content);
-                saveStudyNotes(notes);
-                renderStudyNotes(notes);
+                notes.push({ text });
+                localStorage.setItem(LOCAL_STORAGE_STUDY_NOTES_KEY, JSON.stringify(notes));
                 studyContent.value = '';
+                loadStudyNotes();
             }
         });
+
+        function deleteStudyNote(index) {
+            let notes = JSON.parse(localStorage.getItem(LOCAL_STORAGE_STUDY_NOTES_KEY) || '[]');
+            notes.splice(index, 1);
+            localStorage.setItem(LOCAL_STORAGE_STUDY_NOTES_KEY, JSON.stringify(notes));
+            loadStudyNotes();
+        }
 
         function loadWrongAnswers() {
             const wrongAnswers = JSON.parse(localStorage.getItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY) || '[]');
-            renderWrongAnswers(wrongAnswers);
-        }
-
-        function saveWrongAnswers(wrongAnswers) {
-            localStorage.setItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY, JSON.stringify(wrongAnswers));
-        }
-
-        function addToWrongAnswers(wrongAnswer) {
-            const wrongAnswers = JSON.parse(localStorage.getItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY) || '[]');
-            const existingIndex = wrongAnswers.findIndex(item => item.word === wrongAnswer.word);
-            if (existingIndex !== -1) {
-                wrongAnswers[existingIndex] = wrongAnswer; 
-            } else {
-                wrongAnswers.push(wrongAnswer);
+            wrongAnswersList.innerHTML = '';
+            if (wrongAnswers.length === 0) {
+                wrongAnswersList.innerHTML = '<p style="text-align:center; color:#777;">오답이 없습니다.</p>';
+                clearAllWrongBtn.style.display = 'none';
+                return;
             }
-            saveWrongAnswers(wrongAnswers);
-            renderWrongAnswers(wrongAnswers);
+            clearAllWrongBtn.style.display = 'block';
+
+            wrongAnswers.forEach((item, index) => {
+                const li = document.createElement('li');
+                const contentDiv = document.createElement('div');
+                contentDiv.classList.add('wrong-answer-content');
+                const wordDiv = document.createElement('div');
+                wordDiv.classList.add('wrong-answer-word');
+                wordDiv.textContent = item.en;
+                const detailsDiv = document.createElement('div');
+                detailsDiv.classList.add('wrong-answer-details');
+                detailsDiv.textContent = `정답: ${item.ko}`;
+                contentDiv.appendChild(wordDiv);
+                contentDiv.appendChild(detailsDiv);
+                const buttonsDiv = document.createElement('div');
+                buttonsDiv.classList.add('wrong-answer-buttons');
+                const retryBtn = document.createElement('button');
+                retryBtn.classList.add('retry-btn');
+                retryBtn.textContent = '다시 풀기';
+                retryBtn.onclick = () => { generateSpecificQuiz(item); };
+                const deleteBtn = document.createElement('button');
+                deleteBtn.classList.add('delete-wrong-btn');
+                deleteBtn.textContent = '삭제';
+                deleteBtn.onclick = () => deleteWrongAnswer(index);
+                buttonsDiv.appendChild(retryBtn);
+                buttonsDiv.appendChild(deleteBtn);
+                li.appendChild(contentDiv);
+                li.appendChild(buttonsDiv);
+                wrongAnswersList.appendChild(li);
+            });
         }
 
-        function renderWrongAnswers(wrongAnswers) {
-            wrongAnswersList.innerHTML = wrongAnswers.map((item, index) => `
-                <li>
-                    <div class="wrong-answer-content">
-                        <div class="wrong-answer-word">${item.word}</div>
-                        <div class="wrong-answer-details">
-                            정답: ${item.meaning} <br>
-                            내 답: ${item.userAnswer} <br>
-                            난이도: ${item.difficulty} <br>
-                            시간: ${new Date(item.timestamp).toLocaleString()}
-                        </div>
-                    </div>
-                    <div class="wrong-answer-buttons">
-                        <button class="retry-btn" onclick="retryWrongAnswer(${index})">다시 풀기</button>
-                        <button class="delete-wrong-btn" onclick="deleteWrongAnswer(${index})">삭제</button>
-                    </div>
-                </li>
-            `).join('');
-            clearAllWrongBtn.style.display = wrongAnswers.length > 0 ? 'block' : 'none';
+        function addWrongAnswer(word) {
+            let wrongAnswers = JSON.parse(localStorage.getItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY) || '[]');
+            if (!wrongAnswers.some(item => item.en.toLowerCase() === word.en.toLowerCase())) {
+                wrongAnswers.push(word);
+                localStorage.setItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY, JSON.stringify(wrongAnswers));
+            }
+            loadWrongAnswers(); 
         }
 
-        window.deleteWrongAnswer = function(index) {
-            const wrongAnswers = JSON.parse(localStorage.getItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY) || '[]');
+        function deleteWrongAnswer(index) {
+            let wrongAnswers = JSON.parse(localStorage.getItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY) || '[]');
             wrongAnswers.splice(index, 1);
-            saveWrongAnswers(wrongAnswers);
-            renderWrongAnswers(wrongAnswers);
+            localStorage.setItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY, JSON.stringify(wrongAnswers));
+            loadWrongAnswers();
         }
 
-        window.retryWrongAnswer = function(index) {
-            const wrongAnswers = JSON.parse(localStorage.getItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY) || '[]');
-            const itemToRetry = wrongAnswers[index];
-            let wordData = null;
-            let difficultyOfWord = null;
-
-            for (const diff in wordsByDifficulty) {
-                const found = wordsByDifficulty[diff].find(w => w.en === itemToRetry.word);
-                if (found) {
-                    wordData = found;
-                    difficultyOfWord = diff;
-                    break;
-                }
-            }
-
-            if (wordData) {
-                wrongAnswers.splice(index, 1);
-                saveWrongAnswers(wrongAnswers);
-                renderWrongAnswers(wrongAnswers);
-
-                document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
-                const difficultyBtn = document.querySelector(`.difficulty-btn[data-difficulty="${difficultyOfWord}"]`);
-                if (difficultyBtn) difficultyBtn.classList.add('active');
-                
-                currentDifficulty = difficultyOfWord;
-                populateCurrentWordPool();
-                generateSpecificQuiz(wordData);
-            } else {
-                alert("오류: 해당 단어를 찾을 수 없어 다시 풀 수 없습니다. 목록에서만 삭제합니다.");
-                deleteWrongAnswer(index);
-            }
-        }
-
-        clearAllWrongBtn.addEventListener('click', function() {
-            if (confirm('정말로 모든 오답 기록을 삭제하시겠습니까?')) {
-                saveWrongAnswers([]);
-                renderWrongAnswers([]);
+        clearAllWrongBtn.addEventListener('click', () => {
+            if (confirm('모든 오답 기록을 삭제하시겠습니까?')) {
+                localStorage.removeItem(LOCAL_STORAGE_WRONG_ANSWERS_KEY);
+                loadWrongAnswers();
             }
         });
 
-        function closeAllPanels() {
-            allPanels.forEach(panel => panel.style.display = 'none');
-        }
-
-        function togglePanelVisibility(panelToShow) {
-            const isCurrentlyVisible = panelToShow.style.display === 'block';
-            closeAllPanels();
-            if (!isCurrentlyVisible) {
-                panelToShow.style.display = 'block';
-            }
-        }
-
-        studyNav.addEventListener('click', (e) => { e.preventDefault(); togglePanelVisibility(studyPanel); });
-        wrongAnswersNav.addEventListener('click', (e) => { e.preventDefault(); togglePanelVisibility(wrongAnswersPanel); });
-        homeLink.addEventListener('click', (e) => { e.preventDefault(); closeAllPanels(); });
-
         searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase().trim();
-            if (searchTerm.length === 0) {
-                searchResults.style.display = 'none';
-                searchResultsContent.innerHTML = '';
+            const searchTerm = this.value.trim().toLowerCase();
+            searchResultsContent.innerHTML = '';
+            if (!searchTerm) {
+                // searchResults.style.display = 'none'; // Keep it open if focused, but empty
                 return;
             }
+            // searchResults.style.display = 'block'; // Ensure visible if it was hidden
 
             const results = [];
             for (const difficulty in wordsByDifficulty) {
-                wordsByDifficulty[difficulty].forEach(wordPair => {
-                    if (wordPair.en.toLowerCase().includes(searchTerm) || wordPair.ko.toLowerCase().includes(searchTerm)) {
-                        if (!results.some(r => r.en === wordPair.en)) {
-                            results.push(wordPair);
+                wordsByDifficulty[difficulty].forEach(word => {
+                    if (word.en.toLowerCase().includes(searchTerm) || word.ko.includes(searchTerm)) {
+                        // Avoid duplicates in search results display if word exists in multiple custom lists (though unlikely with current setup)
+                        if (!results.some(r => r.en.toLowerCase() === word.en.toLowerCase())) {
+                             results.push(word);
                         }
                     }
                 });
             }
-            
-            closeAllPanels(); // Close other panels before showing search results
-            searchResults.style.display = 'block'; // Show panel even if no results to display message
 
             if (results.length > 0) {
-                searchResultsContent.innerHTML = results.map(item => `
-                    <div class="search-result-item">
-                        <span class="search-word">${item.en}</span>: 
-                        <span class="search-meaning">${item.ko}</span>
-                    </div>
-                `).join('');
+                results.forEach(word => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.classList.add('search-result-item');
+                    itemDiv.innerHTML = `<span class="search-word">${word.en}</span>: <span class="search-meaning">${word.ko}</span>`;
+                    itemDiv.onclick = () => {
+                        generateSpecificQuiz(word);
+                        this.value = ''; 
+                        // searchResults.style.display = 'none'; // Panel will close via closeAllPanels in generateSpecificQuiz
+                    };
+                    searchResultsContent.appendChild(itemDiv);
+                });
             } else {
-                searchResultsContent.innerHTML = '<p style="color: #666; text-align: center;">검색 결과가 없습니다.</p>';
-            }
-        });
-        
-        searchInput.addEventListener('focus', function() {
-            if (this.value.trim().length > 0) { // Only show if there's existing text
-                closeAllPanels();
-                searchResults.style.display = 'block';
-            }
-        });
-
-        document.addEventListener('click', function(event) {
-            const isHeaderClick = event.target.closest('header');
-            const isPanelClick = allPanels.some(panel => panel.style.display === 'block' && panel.contains(event.target));
-
-            if (!isHeaderClick && !isPanelClick) {
-                closeAllPanels();
+                searchResultsContent.innerHTML = '<p style="text-align:center; color:#777;">검색 결과가 없습니다.</p>';
             }
         });
 
