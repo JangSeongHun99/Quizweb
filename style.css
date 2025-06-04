@@ -1,31 +1,48 @@
-body {
-    font-family: Arial, sans-serif; /* Choose a font that matches */
+/* General Resets and Base Styles - Inspired by Quizlet */
+* {
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #d6e0f5, #f5f9ff);
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+                 Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+html {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-attachment: fixed;
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-attachment: fixed; /* 배경을 뷰포트에 고정 */
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh;
 }
 
+/* Header Styling - Inspired by Quizlet */
 header {
     width: 100%;
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 10px 0; /* Vertical padding */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle shadow */
-    position: sticky; /* Makes the header stick at the top when scrolling */
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(30px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 0; /* Padding will be handled by header-container */
+    position: sticky;
     top: 0;
-    z-index: 1000; /* Ensures header stays on top of other content */
+    z-index: 1000;
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.08),
+      0 1px 0px rgba(255, 255, 255, 0.25) inset;
 }
 
 .header-container {
     width: 100%;
-    max-width: 1200px; /* Or your desired max width for content */
-    margin: 0 auto; /* Center the container */
-    padding: 0 20px; /* Horizontal padding inside the container */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 40px; /* Quizlet-like padding */
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
@@ -38,196 +55,271 @@ header {
 }
 
 .logo {
-    font-size: 1.8em; /* Adjust as needed */
-    font-weight: bold;
-    color: #7b68ee; /* Quizlet purple color */
+    font-size: 1.8rem; /* Quizlet logo size */
+    font-weight: 700; /* Quizlet logo weight */
+    color: white; /* Quizlet logo color */
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Quizlet logo shadow */
     text-decoration: none;
-    margin-right: 30px; /* Space between logo and nav */
+    margin-right: 30px;
 }
-
 
 .header-right {
     display: flex;
     align-items: center;
 }
 
-.header-right a {
-    text-decoration: none;
-    margin-left: 15px;
-    font-size: 0.95em;
+/* Simulating Quizlet nav-buttons style for the create-button */
+.header-right .create-button {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    font-size: 0.95rem;
+    color: white;
+    cursor: pointer;
+    padding: 12px 18px;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.08),
+      0 1px 0px rgba(255, 255, 255, 0.25) inset;
     font-weight: 500;
+    text-decoration: none;
 }
 
-.create-button {
-    color: #333; /* Or a specific color */
+.header-right .create-button:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+    box-shadow:
+      0 8px 24px rgba(0, 0, 0, 0.12),
+      0 1px 0px rgba(255, 255, 255, 0.35) inset;
 }
 
-.login-button {
-    background-color: #f0f0f0; /* Light grey, or transparent */
-    color: #333;
-    padding: 8px 15px;
-    border-radius: 5px;
-    border: 1px solid #ddd; /* Optional border */
-}
-.login-button:hover {
-    background-color: #e0e0e0;
-}
-
+/* Main Content Styling */
 main {
     width: 100%;
-    max-width: 1200px; /* Adjust as needed */
-    padding: 20px;
+    max-width: 1200px; /* Consistent max-width */
+    padding: 40px; /* Quizlet container padding */
     box-sizing: border-box;
+    flex-grow: 1; /* Allows main to fill space if footer is present */
 }
 
 .hero-section {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 60px; /* Increased margin */
 }
 
 .hero-section h1 {
-    font-size: 2.5em; /* Adjust as needed */
-    color: #333;
-    margin-bottom: 10px;
+    font-size: 2.8em; /* Slightly larger for impact */
+    color: white;
+    margin-bottom: 20px;
+    font-weight: 700;
+    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
 
 .hero-section p {
-    font-size: 1.1em;
-    color: #555;
+    font-size: 1.2em;
+    color: rgba(255, 255, 255, 0.85);
     max-width: 700px;
-    margin: 0 auto 20px auto; /* Center the paragraph */
+    margin: 0 auto 30px auto;
+    line-height: 1.7;
 }
 
-.signup-button { /* Example styling if you add the button */
-    background-color: #7b68ee; /* Purple color from screenshot */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 1em;
-    cursor: pointer;
-}
-
-.teacher-link { /* Example styling if you add the teacher link */
-    display: block;
-    margin-top: 10px;
-    color: #7b68ee;
-    text-decoration: none;
-}
-
+/* Study Options - Cards Styling - Inspired by Quizlet */
 .study-options {
     display: flex;
-    justify-content: center; /* Centers the cards */
+    justify-content: center;
     gap: 30px; /* Space between cards */
-    flex-wrap: wrap; /* Allows cards to wrap on smaller screens */
+    flex-wrap: wrap;
 }
 
 .study-card {
-    width: 300px; /* Adjust width as needed */
-    min-height: 350px; /* Adjust height as needed */
-    border-radius: 15px;
-    padding: 20px;
-    box-sizing: border-box;
+    width: 320px; /* Adjust width as needed */
+    min-height: 380px; /* Adjust height as needed */
     text-decoration: none;
-    color: white;
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s ease; /* For hover effect */
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Quizlet card transition */
+    animation: fadeIn 0.6s ease; /* Quizlet card animation */
+
+    /* Quizlet Card Base Style */
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(30px);
+    border-radius: 20px; /* Quizlet card border-radius */
+    padding: 28px; /* Quizlet card padding */
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.08),
+        0 1px 0px rgba(255, 255, 255, 0.25) inset,
+        0 -1px 0px rgba(0, 0, 0, 0.03) inset;
 }
 
 .study-card:hover {
-    transform: translateY(-5px); /* Slight lift on hover */
+    transform: translateY(-6px); /* Slightly more lift */
+    box-shadow:
+        0 16px 48px rgba(0, 0, 0, 0.12),
+        0 1px 0px rgba(255, 255, 255, 0.35) inset,
+        0 -1px 0px rgba(0, 0, 0, 0.05) inset;
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .study-card h2 {
     margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.8em; /* Adjust as needed */
+    margin-bottom: 20px;
+    font-size: 1.6em; /* Adjusted for consistency */
     text-align: center;
+    font-weight: 700;
+    color: white; /* Titles on the card itself */
 }
 
 .card-content {
     flex-grow: 1;
-    background-color: white;
-    border-radius: 10px;
-    padding: 15px;
+    /* Glassmorphic inner content area */
+    background-color: rgba(255, 255, 255, 0.1); /* Lighter, slightly transparent white */
+    border-radius: 14px; /* Slightly smaller radius than parent */
+    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08) inset; /* Inner shadow for depth */
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-/* Specific card styles */
+/* Specific card styles - keeping their identity but harmonizing */
 .learn-card {
-    background-color: #a0e0ff; /* Light blue from screenshot */
-}
-.learn-card h2 {
-    color: #007bff; /* Adjust to match title color */
+    /* Background is already set by .study-card, but can be overridden if needed */
+    /* Example: background-color: rgba(160, 224, 255, 0.2); */ /* Light blue, more transparent */
 }
 
 .learn-card .card-content img {
-    max-width: 80%;
+    max-width: 70%; /* Adjusted size */
     height: auto;
-    margin-bottom: 10px;
-    border-radius: 5px;
+    margin-bottom: 15px;
+    border-radius: 8px; /* Rounded images */
 }
 
 .learn-card .placeholder-text {
-    color: #aaa; /* Light grey for placeholder */
+    color: rgba(255, 255, 255, 0.7); /* Lighter placeholder text */
     font-size: 0.9em;
     text-align: center;
-    border-top: 1px solid #eee; /* Mimic the input line */
+    border-top: 1px solid rgba(255, 255, 255, 0.2); /* Lighter border */
     padding-top: 10px;
     width: 80%;
 }
 
 
 .flashcard-card {
-    background-color: #4a48c7; /* Dark blue from screenshot */
-}
-
-.flashcard-card h2 {
-    color: white;
+    /* Example: background-color: rgba(74, 72, 199, 0.25); */ /* Dark blue, more transparent */
 }
 
 .flashcard-card .card-content {
-    /* Content already centered by .card-content styles */
+    /* Content already centered */
 }
 
 .flashcard-example {
-    background-color: white; /* Card itself is white */
-    color: #333;
+    background-color: rgba(255, 255, 255, 0.85); /* More opaque white for readability of inner flashcard */
+    color: #333; /* Darker text for contrast on light bg */
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 10px; /* Quizlet inner element radius */
     text-align: center;
-    width: 80%; /* Adjust size of inner flashcard */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Shadow for the flashcard */
+    width: 85%; /* Adjust size of inner flashcard */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Softer shadow */
 }
 
 .flashcard-example span {
     display: block;
     font-size: 1.2em;
     margin-bottom: 10px;
+    font-weight: 600;
+    color: #4A48C7; /* Using the original dark blue for accent */
 }
 
 .flashcard-example img {
-    max-width: 100px; /* Adjust image size */
+    max-width: 90px; /* Adjust image size */
     height: auto;
+}
+
+/* Animation from Quizlet */
+@keyframes fadeIn {
+ from {
+    opacity: 0;
+    transform: translateY(20px);
+ }
+ to {
+    opacity: 1;
+    transform: translateY(0);
+ }
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+    .header-container {
+        padding: 15px 20px;
+    }
+    .logo {
+        font-size: 1.6rem;
+    }
+    .header-right .create-button {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+
+    main {
+        padding: 20px;
+    }
+    .hero-section h1 {
+        font-size: 2.2em;
+    }
+    .hero-section p {
+        font-size: 1.1em;
+    }
+
     .study-options {
         flex-direction: column;
         align-items: center;
+        gap: 25px;
     }
     .study-card {
-        width: 80%; /* Make cards wider on smaller screens */
-        max-width: 350px; /* But not too wide */
-        margin-bottom: 20px;
+        width: 90%; /* Make cards wider on smaller screens */
+        max-width: 400px; /* But not too wide */
+        min-height: auto; /* Adjust height for content */
+        padding: 20px;
     }
+    .study-card h2 {
+        font-size: 1.4em;
+        margin-bottom: 15px;
+    }
+    .card-content {
+        padding: 15px;
+    }
+    .flashcard-example {
+        width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
     .hero-section h1 {
-        font-size: 2em;
+        font-size: 1.8em;
     }
+    .hero-section p {
+        font-size: 1em;
+    }
+    .logo {
+        font-size: 1.5rem;
+        margin-right: 15px;
+    }
+     .header-right .create-button {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+}
+
+/* Footer (if you add content later) */
+footer {
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: auto; /* Pushes footer to bottom if content is short */
+    /* background: rgba(0,0,0,0.1); Optional subtle background for footer */
 }
