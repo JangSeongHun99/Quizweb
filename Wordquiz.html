@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Quizlet</title>
+<title>EduQuiz</title>
 <style>
 * {
 margin: 0;
@@ -44,11 +44,12 @@ box-shadow:
   0 1px 0px rgba(255, 255, 255, 0.25) inset;
  }
 .logo {
-font-size: 1.8rem;
-font-weight: 700;
-color: white;
-text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
- }
+    font-size: 2em;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
 .nav-buttons {
 display: flex;
 gap: 15px;
@@ -659,7 +660,7 @@ padding: 30px 25px;
 </head>
 <body>
 <header>
-<div class="logo">Quizlet</div>
+<a href="index.html" class="logo">EduQuiz</a>
 <div class="search-bar">
 <input type="text" id="searchInput" placeholder="단어, 뜻, 예문 검색..." oninput="debouncedSearch()" />
 <button class="search-clear" id="searchClear" onclick="clearSearch()">×</button>
